@@ -51,6 +51,9 @@ def create_enclosure(platform):
         LOG.info("Creating Mark II Enclosure")
         from neon_enclosure.client.enclosure.mark2 import EnclosureMark2
         enclosure = EnclosureMark2()
+    elif platform in ("linux", "ubuntu"):
+        from neon_enclosure.client.enclosure.linux import EnclosureLinux
+        enclosure = EnclosureLinux()
     else:
         LOG.info("Creating generic enclosure, platform='{}'".format(platform))
 
