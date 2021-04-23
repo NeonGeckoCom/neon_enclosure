@@ -15,16 +15,21 @@
 # limitations under the License.
 
 import time
-import alsaaudio
+
 from mycroft_bus_client import Message
 from neon_utils.logger import LOG
 
 from neon_enclosure.enclosure.display_manager import \
     init_display_manager_bus_connection
+from neon_enclosure.client.enclosure.base import Enclosure
+from neon_enclosure.enclosure.software.alsa_audio import AlsaAudio
+
+try:
+    from neon_enclosure.enclosure.software.pulse_audio import PulseAudio
+except ImportError:  # Catch missing pulsectl module
+    PulseAudio = None
 
 from mycroft.util import connected
-
-from neon_enclosure.client.enclosure.base import Enclosure
 
 
 class EnclosureLinux(Enclosure):
@@ -33,12 +38,16 @@ class EnclosureLinux(Enclosure):
     Mycroft Core.  This is used for Picroft or other headless systems,
     and/or for users of the CLI.
     """
-
-    _last_internet_notification = 0
-
     def __init__(self):
         super().__init__()
-        self.alsa = alsaaudio.Mixer()
+        self._backend = "pulsectl"  # TODO: Read from preference
+        if not PulseAudio:
+            self._backend = "alsa"
+
+        if self._backend == "pulsectl":
+            self.audio_system = PulseAudio()
+        else:
+            self.audio_system = AlsaAudio()
         # Notifications from mycroft-core
         self.bus.on('enclosure.notify.no_internet', self.on_no_internet)
         # TODO: this requires the Enclosure to be up and running before the training is complete.
@@ -46,36 +55,20 @@ class EnclosureLinux(Enclosure):
 
         self._define_event_handlers()
         self._default_duck = 0.3
-        self._pre_duck_level = self._get_alsa_avg_output()
-        self._pre_mute_level = self._get_alsa_avg_output()
+        self._pre_duck_level = self.audio_system.get_volume()
+        self._pre_mute_level = self.audio_system.get_volume()
 
         # initiates the web sockets on display manager
         # NOTE: this is a temporary place to connect the display manager
         init_display_manager_bus_connection()
-
-    def _get_alsa_avg_output(self) -> float:
-        """
-        Gets the average audio output level from ALSA
-        :return: average volume
-        """
-        levels = self.alsa.getvolume()
-        volume = sum(levels) / len(levels)
-        return volume
-
-    def _get_alsa_mute_status(self) -> bool:
-        """
-        Gets the mute status from ALSA
-        :return: True if audio output is muted
-        """
-        return any([i for i in self.alsa.getmute() if i == 1])
 
     def on_volume_set(self, message):
         """
         Handler for "mycroft.volume.set". Sets volume and emits hardware.volume to notify other listeners of change.
         :param message: Message associated with request
         """
-        new_volume = message.data.get("percent", self._get_alsa_avg_output())
-        self.alsa.setvolume(round(float(new_volume)))
+        new_volume = message.data.get("percent", self.audio_system.get_volume())
+        self.audio_system.set_volume(round(float(new_volume)))
         # notify anybody listening on the bus who cares
         self.bus.emit(Message("hardware.volume", {
             "volume": new_volume}, context={"source": ["enclosure"]}))
@@ -88,7 +81,7 @@ class EnclosureLinux(Enclosure):
         """
         self.bus.emit(
             message.response(
-                data={'percent': self._get_alsa_avg_output(), 'muted': self._get_alsa_mute_status()}))
+                data={'percent': self.audio_system.get_volume(), 'muted': self.audio_system.get_mute_state()}))
 
     def on_volume_mute(self, message):
         """
@@ -96,11 +89,11 @@ class EnclosureLinux(Enclosure):
         :param message: Message associated with request.
         """
         if message.data.get("mute", False):
-            self._pre_mute_level = self._get_alsa_avg_output()
-            self.alsa.setmute(True)
+            self._pre_mute_level = self.audio_system.get_volume()
+            self.audio_system.set_mute(True)
         else:
-            self.alsa.setmute(False)
-            self.alsa.setvolume(self._pre_mute_level)
+            self.audio_system.set_mute(False)
+            self.audio_system.set_volume(self._pre_mute_level)
 
     def on_volume_duck(self, message):
         """
@@ -108,10 +101,10 @@ class EnclosureLinux(Enclosure):
         :param message: Message associated with request
         :return:
         """
-        self._pre_duck_level = self._get_alsa_avg_output()
+        self._pre_duck_level = self.audio_system.get_volume()
         duck_scalar = float(message.data.get("duck_scalar")) or self._default_duck
         new_vol = self._pre_duck_level * duck_scalar
-        self.alsa.setvolume(new_vol)
+        self.audio_system.set_volume(round(new_vol))
 
     def on_volume_unduck(self, message):
         """
@@ -119,7 +112,7 @@ class EnclosureLinux(Enclosure):
         :param message: Message associated with request
         :return:
         """
-        self.alsa.setvolume(self._pre_duck_level)
+        self.audio_system.set_volume(self._pre_duck_level)
 
     def is_device_ready(self, message):
         # Bus service assumed to be alive if messages sent and received
