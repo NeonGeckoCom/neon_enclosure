@@ -22,10 +22,10 @@ from neon_utils.logger import LOG
 from neon_enclosure.enclosure.display_manager import \
     init_display_manager_bus_connection
 from neon_enclosure.client.enclosure.base import Enclosure
-from neon_enclosure.enclosure.software.alsa_audio import AlsaAudio
+from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
 
 try:
-    from neon_enclosure.enclosure.software.pulse_audio import PulseAudio
+    from neon_enclosure.enclosure.audio.pulse_audio import PulseAudio
 except ImportError:  # Catch missing pulsectl module
     PulseAudio = None
 
@@ -67,8 +67,12 @@ class EnclosureLinux(Enclosure):
         Handler for "mycroft.volume.set". Sets volume and emits hardware.volume to notify other listeners of change.
         :param message: Message associated with request
         """
-        new_volume = message.data.get("percent", self.audio_system.get_volume())
-        self.audio_system.set_volume(round(float(new_volume)))
+        new_volume = message.data.get("percent", self.audio_system.get_volume()/100)  # 0.0-1.0
+        if new_volume > 1.0:
+            new_volume = 1.0
+        elif new_volume < 0.0:
+            new_volume = 0.0
+        self.audio_system.set_volume(round(100 * float(new_volume)))
         # notify anybody listening on the bus who cares
         self.bus.emit(Message("hardware.volume", {
             "volume": new_volume}, context={"source": ["enclosure"]}))
@@ -81,7 +85,7 @@ class EnclosureLinux(Enclosure):
         """
         self.bus.emit(
             message.response(
-                data={'percent': self.audio_system.get_volume(), 'muted': self.audio_system.get_mute_state()}))
+                data={'percent': self.audio_system.get_volume()/100, 'muted': self.audio_system.get_mute_state()}))
 
     def on_volume_mute(self, message):
         """

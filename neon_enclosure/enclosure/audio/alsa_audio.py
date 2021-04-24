@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from neon_enclosure.enclosure.software.audio_system import AudioSystem
+from neon_enclosure.enclosure.audio.audio_system import AudioSystem
 import alsaaudio
 
 
