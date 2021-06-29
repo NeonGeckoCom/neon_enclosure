@@ -29,6 +29,12 @@ try:
 except ImportError:  # Catch missing pulsectl module
     PulseAudio = None
 
+try:
+    from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
+except ImportError:
+    AlsaAudio = None
+
+
 from mycroft.util import connected
 
 
@@ -42,12 +48,17 @@ class EnclosureLinux(Enclosure):
         super().__init__()
         self._backend = "pulsectl"  # TODO: Read from preference
         if not PulseAudio:
-            self._backend = "alsa"
+            if AlsaAudio:
+                self._backend = "alsa"
+            else:
+                raise ImportError("No pulse or alsa backend available!")
 
         if self._backend == "pulsectl":
             self.audio_system = PulseAudio()
-        else:
+        elif self._backend == "alsa":
             self.audio_system = AlsaAudio()
+        else:
+            raise ValueError(f"Invalid audio backend defined: {self._backend}")
         # Notifications from mycroft-core
         self.bus.on('enclosure.notify.no_internet', self.on_no_internet)
         # TODO: this requires the Enclosure to be up and running before the training is complete.
