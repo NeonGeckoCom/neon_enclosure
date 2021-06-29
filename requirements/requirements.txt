@@ -2,4 +2,5 @@ mycroft-messagebus-client>=0.9
 neon-utils>=0.5.7
 tornado==6.0.3
 RPi.GPIO==0.7.0
-smbus2==0.4.0pulsectl~=21.5
+smbus2==0.4.0
+pulsectl~=21.5

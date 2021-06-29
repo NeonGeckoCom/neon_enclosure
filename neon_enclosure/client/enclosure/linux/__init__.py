@@ -37,6 +37,12 @@ except ImportError:
     AlsaAudio = None
 
 
+try:
+    from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
+except ImportError:
+    AlsaAudio = None
+
+
 from mycroft.util import connected
 
 
