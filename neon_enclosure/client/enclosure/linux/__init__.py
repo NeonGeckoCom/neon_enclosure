@@ -27,6 +27,9 @@ try:
     from neon_enclosure.enclosure.audio.pulse_audio import PulseAudio
 except ImportError:  # Catch missing pulsectl module
     PulseAudio = None
+except OSError as e:
+    LOG.error(e)
+    PulseAudio = None
 
 try:
     from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
