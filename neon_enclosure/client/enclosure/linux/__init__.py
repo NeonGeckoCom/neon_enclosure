@@ -22,7 +22,6 @@ from neon_utils.logger import LOG
 from neon_enclosure.enclosure.display_manager import \
     init_display_manager_bus_connection
 from neon_enclosure.client.enclosure.base import Enclosure
-from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
 
 try:
     from neon_enclosure.enclosure.audio.pulse_audio import PulseAudio
