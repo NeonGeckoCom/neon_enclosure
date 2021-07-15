@@ -65,17 +65,18 @@ def create_enclosure(platform):
     return enclosure
 
 
-def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping):
+def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, config: dict = None):
     """Launch one of the available enclosure implementations.
 
     This depends on the configured platform and can currently either be
     mycroft_mark_1 or mycroft_mark_2, if unconfigured a generic enclosure with
     only the GUI bus will be started.
     """
+    config = config or dict()
     # Read the system configuration
     # system_config = LocalConf(SYSTEM_CONFIG)
     # platform = system_config.get("enclosure", {}).get("platform")
-    platform = get_neon_device_type()
+    platform = config.get("platform") or get_neon_device_type()
     enclosure = create_enclosure(platform)
 
     if enclosure:
@@ -89,9 +90,9 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping):
         if platform == "mycroft_mark_2":
             LOG.info("Mark2 detected[%s], additional capabilities ===>%s" % (enclosure.m2enc.board_type,
                                                                              enclosure.m2enc.capabilities))
-            LOG.info("Leds ===>%s" % (enclosure.m2enc.leds.capabilities))
-            LOG.info("Volume ===>%s" % (enclosure.m2enc.hardware_volume.capabilities))
-            LOG.info("Switches ===>%s" % (enclosure.m2enc.switches.capabilities))
+            # LOG.info("Leds ===>%s" % (enclosure.m2enc.leds.capabilities))
+            # LOG.info("Volume ===>%s" % (enclosure.m2enc.hardware_volume.capabilities))
+            # LOG.info("Switches ===>%s" % (enclosure.m2enc.switches.capabilities))
 
         try:
             LOG.info("__main__().py Starting Client Enclosure!")
@@ -102,7 +103,7 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping):
             enclosure.stop()
             stopping_hook()
         except Exception as e:
-            error_hook(e)
+            error_hook(repr(e))
     else:
         LOG.info("No enclosure available for this hardware, running headless")
 
