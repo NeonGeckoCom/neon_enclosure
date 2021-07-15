@@ -59,6 +59,8 @@ class TestAPIMethods(unittest.TestCase):
         cls.enclosure_thread.terminate()
 
     def test_services_running(self):
+        while not self.bus.started_running:
+            sleep(1)
         resp = self.bus.wait_for_response(Message("mycroft.volume.get"))
         self.assertIsInstance(resp, Message)
         vol = resp.data.get("percent")

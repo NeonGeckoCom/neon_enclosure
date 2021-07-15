@@ -85,7 +85,7 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, co
         # enclosure.m2enc.capabilities
         enclosure.default_caps = EnclosureCapabilities()
 
-        LOG.info("Enclosure created, capabilities ===>%s" % (enclosure.default_caps.caps,))
+        LOG.info(f"{platform} Enclosure created")
 
         if platform == "mycroft_mark_2":
             LOG.info("Mark2 detected[%s], additional capabilities ===>%s" % (enclosure.m2enc.board_type,
@@ -95,7 +95,7 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, co
             LOG.info("Switches ===>%s" % (enclosure.m2enc.switches.capabilities))
 
         try:
-            LOG.info("__main__().py Starting Client Enclosure!")
+            LOG.info("Starting Client Enclosure!")
             reset_sigint_handler()
             enclosure.run()
             ready_hook()
@@ -103,7 +103,7 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, co
             enclosure.stop()
             stopping_hook()
         except Exception as e:
-            error_hook(e)
+            error_hook(repr(e))
     else:
         LOG.info("No enclosure available for this hardware, running headless")
 
