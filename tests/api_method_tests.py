@@ -34,10 +34,6 @@ from mycroft.messagebus.service.__main__ import main as messagebus_service
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from neon_enclosure.client.enclosure.__main__ import main as neon_enclosure_main
 
-TEST_CONFIG = get_neon_local_config(os.path.dirname(__file__))
-TEST_CONFIG["devVars"]["devType"] = "generic"
-# TODO: Define some testing enclosure with mock audio DM
-
 
 class TestAPIMethods(unittest.TestCase):
     bus_thread = None
@@ -46,7 +42,8 @@ class TestAPIMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.bus_thread = Process(target=messagebus_service, daemon=False)
-        cls.enclosure_thread = Process(target=neon_enclosure_main, daemon=False)
+        cls.enclosure_thread = Process(target=neon_enclosure_main,
+                                       kwargs={"config": {"enclosure": "generic"}}, daemon=False)
         cls.bus_thread.start()
         cls.enclosure_thread.start()
         cls.bus = MessageBusClient()

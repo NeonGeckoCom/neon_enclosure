@@ -65,7 +65,7 @@ def create_enclosure(platform):
     return enclosure
 
 
-def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping):
+def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, config: dict = None):
     """Launch one of the available enclosure implementations.
 
     This depends on the configured platform and can currently either be
@@ -75,7 +75,8 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping):
     # Read the system configuration
     # system_config = LocalConf(SYSTEM_CONFIG)
     # platform = system_config.get("enclosure", {}).get("platform")
-    platform = get_neon_device_type()
+    config = config or dict()
+    platform = config.get("platform") or get_neon_device_type()
     enclosure = create_enclosure(platform)
 
     if enclosure:
