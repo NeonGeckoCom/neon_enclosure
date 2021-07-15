@@ -22,12 +22,20 @@ from neon_utils.logger import LOG
 from neon_enclosure.enclosure.display_manager import \
     init_display_manager_bus_connection
 from neon_enclosure.client.enclosure.base import Enclosure
-from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
 
 try:
     from neon_enclosure.enclosure.audio.pulse_audio import PulseAudio
 except ImportError:  # Catch missing pulsectl module
     PulseAudio = None
+except OSError as e:
+    LOG.error(e)
+    PulseAudio = None
+
+try:
+    from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
+except ImportError:
+    AlsaAudio = None
+
 
 from mycroft.util import connected
 
@@ -42,12 +50,17 @@ class EnclosureLinux(Enclosure):
         super().__init__()
         self._backend = "pulsectl"  # TODO: Read from preference
         if not PulseAudio:
-            self._backend = "alsa"
+            if AlsaAudio:
+                self._backend = "alsa"
+            else:
+                raise ImportError("No pulse or alsa backend available!")
 
         if self._backend == "pulsectl":
             self.audio_system = PulseAudio()
-        else:
+        elif self._backend == "alsa":
             self.audio_system = AlsaAudio()
+        else:
+            raise ValueError(f"Invalid audio backend defined: {self._backend}")
         # Notifications from mycroft-core
         self.bus.on('enclosure.notify.no_internet', self.on_no_internet)
         # TODO: this requires the Enclosure to be up and running before the training is complete.
@@ -156,11 +169,3 @@ class EnclosureLinux(Enclosure):
 
     def speak(self, text):
         self.bus.emit(Message("speak", {'utterance': text}))
-
-    def _define_event_handlers(self):
-        """Assign methods to act upon message bus events."""
-        self.bus.on('mycroft.volume.set', self.on_volume_set)
-        self.bus.on('mycroft.volume.get', self.on_volume_get)
-        self.bus.on('mycroft.volume.mute', self.on_volume_mute)
-        self.bus.on('mycroft.volume.duck', self.on_volume_duck)
-        self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
