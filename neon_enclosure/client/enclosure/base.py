@@ -11,12 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+import asyncio
+import json
+from abc import abstractmethod
 
+import tornado.web as web
+from tornado import ioloop
+from tornado.websocket import WebSocketHandler
 from collections import namedtuple
 from threading import Lock
 from mycroft_bus_client import MessageBusClient, Message
+from ovos_utils import create_daemon
 from ovos_utils.log import LOG
 from neon_utils.configuration_utils import get_mycroft_compatible_config
+# from mycroft.configuration import Configuration
 
 
 Namespace = namedtuple('Namespace', ['name', 'pages'])
@@ -55,7 +64,7 @@ class Enclosure:
         config = get_mycroft_compatible_config()
         self.lang = config['lang']
         self.config = config.get("enclosure")
-        LOG.info(config)
+        # LOG.info(config)
         config["gui_websocket"] = config.get("gui_websocket", {"host": "0.0.0.0",
                                                                "base_port": 18181,
                                                                "route": "/gui",
@@ -112,6 +121,44 @@ class Enclosure:
     def stop(self):
         """Perform any enclosure shutdown processes."""
         pass
+
+    @abstractmethod
+    def on_volume_set(self, message):
+        """
+        Handler for "mycroft.volume.set".
+        """
+
+    @abstractmethod
+    def on_volume_get(self, message):
+        """
+        Handler for "mycroft.volume.get".
+        """
+
+    @abstractmethod
+    def on_volume_mute(self, message):
+        """
+        Handler for "mycroft.volume.mute".
+        """
+
+    @abstractmethod
+    def on_volume_duck(self, message):
+        """
+        Handler for "mycroft.volume.duck".
+        """
+
+    @abstractmethod
+    def on_volume_unduck(self, message):
+        """
+        Handler for "mycroft.volume.unduck".
+        """
+
+    def _define_event_handlers(self):
+        """Assign methods to act upon message bus events."""
+        self.bus.on('mycroft.volume.set', self.on_volume_set)
+        self.bus.on('mycroft.volume.get', self.on_volume_get)
+        self.bus.on('mycroft.volume.mute', self.on_volume_mute)
+        self.bus.on('mycroft.volume.duck', self.on_volume_duck)
+        self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
 
     ######################################################################
     # GUI client API
