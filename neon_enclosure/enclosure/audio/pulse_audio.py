@@ -46,7 +46,7 @@ class PulseAudio(AudioSystem):
         self.pulse.mute(self._sink, mute)
 
     def get_mute_state(self) -> bool:
-        return self._sink.mute
+        return self._sink.mute == 1
 
     def set_input_level(self, level: int):
         pass

@@ -169,11 +169,3 @@ class EnclosureLinux(Enclosure):
 
     def speak(self, text):
         self.bus.emit(Message("speak", {'utterance': text}))
-
-    def _define_event_handlers(self):
-        """Assign methods to act upon message bus events."""
-        self.bus.on('mycroft.volume.set', self.on_volume_set)
-        self.bus.on('mycroft.volume.get', self.on_volume_get)
-        self.bus.on('mycroft.volume.mute', self.on_volume_mute)
-        self.bus.on('mycroft.volume.duck', self.on_volume_duck)
-        self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)

@@ -259,10 +259,11 @@ class EnclosureMark2(Enclosure):
 
     def _define_event_handlers(self):
         """Assign methods to act upon message bus events."""
-        self.bus.on('mycroft.volume.set', self.on_volume_set)
-        self.bus.on('mycroft.volume.get', self.on_volume_get)
-        self.bus.on('mycroft.volume.duck', self.on_volume_duck)
-        self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
+        super()._define_event_handlers()
+        # self.bus.on('mycroft.volume.set', self.on_volume_set)
+        # self.bus.on('mycroft.volume.get', self.on_volume_get)
+        # self.bus.on('mycroft.volume.duck', self.on_volume_duck)
+        # self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
         self.bus.on('recognizer_loop:record_begin', self.handle_start_recording)
         self.bus.on('recognizer_loop:record_end', self.handle_stop_recording)
         self.bus.on('recognizer_loop:audio_output_end', self.handle_end_audio)

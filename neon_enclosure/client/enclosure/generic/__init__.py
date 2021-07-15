@@ -35,6 +35,25 @@ class EnclosureGeneric(Enclosure):
     and/or for users of the CLI.
     """
 
+    def on_volume_set(self, message):
+        self.bus.emit(Message("hardware.volume", {
+            "volume": None,
+            "error": "Not Implemented"}, context={"source": ["enclosure"]}))
+
+    def on_volume_get(self, message):
+        self.bus.emit(
+            message.response(
+                data={'percent': None, 'muted': False, "error": "Not Implemented"}))
+
+    def on_volume_mute(self, message):
+        pass
+
+    def on_volume_duck(self, message):
+        pass
+
+    def on_volume_unduck(self, message):
+        pass
+
     _last_internet_notification = 0
 
     def __init__(self):

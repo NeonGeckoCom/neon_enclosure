@@ -14,6 +14,8 @@
 #
 import asyncio
 import json
+from abc import abstractmethod
+
 import tornado.web as web
 from tornado import ioloop
 from tornado.websocket import WebSocketHandler
@@ -62,7 +64,7 @@ class Enclosure:
         config = get_mycroft_compatible_config()
         self.lang = config['lang']
         self.config = config.get("enclosure")
-        LOG.info(config)
+        # LOG.info(config)
         config["gui_websocket"] = config.get("gui_websocket", {"host": "0.0.0.0",
                                                                "base_port": 18181,
                                                                "route": "/gui",
@@ -75,7 +77,7 @@ class Enclosure:
         # Create Message Bus Client
         self.bus = MessageBusClient()
 
-        self.gui = create_gui_service(self, config['gui_websocket'])
+        # self.gui = create_gui_service(self, config['gui_websocket'])
         # This datastore holds the data associated with the GUI provider. Data
         # is stored in Namespaces, so you can have:
         # self.datastore["namespace"]["name"] = value
@@ -119,6 +121,44 @@ class Enclosure:
     def stop(self):
         """Perform any enclosure shutdown processes."""
         pass
+
+    @abstractmethod
+    def on_volume_set(self, message):
+        """
+        Handler for "mycroft.volume.set".
+        """
+
+    @abstractmethod
+    def on_volume_get(self, message):
+        """
+        Handler for "mycroft.volume.get".
+        """
+
+    @abstractmethod
+    def on_volume_mute(self, message):
+        """
+        Handler for "mycroft.volume.mute".
+        """
+
+    @abstractmethod
+    def on_volume_duck(self, message):
+        """
+        Handler for "mycroft.volume.duck".
+        """
+
+    @abstractmethod
+    def on_volume_unduck(self, message):
+        """
+        Handler for "mycroft.volume.unduck".
+        """
+
+    def _define_event_handlers(self):
+        """Assign methods to act upon message bus events."""
+        self.bus.on('mycroft.volume.set', self.on_volume_set)
+        self.bus.on('mycroft.volume.get', self.on_volume_get)
+        self.bus.on('mycroft.volume.mute', self.on_volume_mute)
+        self.bus.on('mycroft.volume.duck', self.on_volume_duck)
+        self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
 
     ######################################################################
     # GUI client API
