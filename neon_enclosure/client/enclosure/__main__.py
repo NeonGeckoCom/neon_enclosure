@@ -51,14 +51,14 @@ def create_enclosure(platform):
         LOG.info("Creating Mark II Enclosure")
         from neon_enclosure.client.enclosure.mark2 import EnclosureMark2
         enclosure = EnclosureMark2()
+    elif platform == "neonPi":
+        from neon_enclosure.client.enclosure.neon_pi import EnclosureNeonPi
+        enclosure = EnclosureNeonPi()
     elif platform in ("linux", "ubuntu"):
         from neon_enclosure.client.enclosure.linux import EnclosureLinux
         enclosure = EnclosureLinux()
     else:
         LOG.info("Creating generic enclosure, platform='{}'".format(platform))
-
-        # TODO: Mechanism to load from elsewhere.  E.g. read a script path from
-        # the mycroft.conf, then load/launch that script.
         from neon_enclosure.client.enclosure.generic import EnclosureGeneric
         enclosure = EnclosureGeneric()
 
