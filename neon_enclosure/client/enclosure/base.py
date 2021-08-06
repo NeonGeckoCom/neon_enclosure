@@ -11,19 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-import asyncio
-import json
-import tornado.web as web
-from tornado import ioloop
-from tornado.websocket import WebSocketHandler
+
 from collections import namedtuple
 from threading import Lock
 from mycroft_bus_client import MessageBusClient, Message
-from ovos_utils import create_daemon
 from ovos_utils.log import LOG
 from neon_utils.configuration_utils import get_mycroft_compatible_config
-# from mycroft.configuration import Configuration
 
 
 Namespace = namedtuple('Namespace', ['name', 'pages'])
@@ -75,7 +68,7 @@ class Enclosure:
         # Create Message Bus Client
         self.bus = MessageBusClient()
 
-        self.gui = create_gui_service(self, config['gui_websocket'])
+        # self.gui = create_gui_service(self, config['gui_websocket'])
         # This datastore holds the data associated with the GUI provider. Data
         # is stored in Namespaces, so you can have:
         # self.datastore["namespace"]["name"] = value
@@ -122,10 +115,12 @@ class Enclosure:
 
     ######################################################################
     # GUI client API
+    # TODO: The below code should be depreciated DM
     @property
     def gui_connected(self):
         """Returns True if at least 1 gui is connected, else False"""
-        return len(GUIWebsocketHandler.clients) > 0
+        LOG.error(f"This method has been depreciated!")
+        return True
 
     def handle_gui_status_request(self, message):
         """Reply to gui status request, allows querying if a gui is
@@ -135,11 +130,7 @@ class Enclosure:
 
     def send(self, msg_dict):
         """ Send to all registered GUIs. """
-        for connection in GUIWebsocketHandler.clients:
-            try:
-                connection.send(msg_dict)
-            except Exception as e:
-                LOG.exception(repr(e))
+        LOG.error(f"This method has been depreciated!")
 
     def on_gui_send_event(self, message):
         """ Send an event to the GUIs. """
@@ -462,120 +453,3 @@ class Enclosure:
         # self.bus.on('recognizer_loop:audio_output_start', self.mouth.talk)
         # self.bus.on('recognizer_loop:audio_output_end', self.mouth.reset)
         pass
-
-
-##########################################################################
-# GUIConnection
-##########################################################################
-
-gui_app_settings = {
-    'debug': True
-}
-
-
-def create_gui_service(enclosure, config):
-    import tornado.options
-    LOG.info('Starting message bus for GUI...')
-    # Disable all tornado logging so mycroft loglevel isn't overridden
-    tornado.options.parse_command_line(['--logging=None'])
-
-    routes = [(config['route'], GUIWebsocketHandler)]
-    application = web.Application(routes, debug=True)
-    application.enclosure = enclosure
-    application.listen(config['base_port'], config['host'])
-
-    create_daemon(ioloop.IOLoop.instance().start)
-    LOG.info('GUI Message bus started!')
-    return application
-
-
-class GUIWebsocketHandler(WebSocketHandler):
-    """The socket pipeline between the GUI and Mycroft."""
-    clients = []
-
-    def open(self):
-        GUIWebsocketHandler.clients.append(self)
-        LOG.info('New Connection opened!')
-        self.synchronize()
-
-    def on_close(self):
-        LOG.info('Closing {}'.format(id(self)))
-        GUIWebsocketHandler.clients.remove(self)
-
-    def synchronize(self):
-        """ Upload namespaces, pages and data to the last connected. """
-        namespace_pos = 0
-        enclosure = self.application.enclosure
-
-        for namespace, pages in enclosure.loaded:
-            LOG.info('Sync {}'.format(namespace))
-            # Insert namespace
-            self.send({"type": "mycroft.session.list.insert",
-                       "namespace": "mycroft.system.active_skills",
-                       "position": namespace_pos,
-                       "data": [{"skill_id": namespace}]
-                       })
-            # Insert pages
-            self.send({"type": "mycroft.gui.list.insert",
-                       "namespace": namespace,
-                       "position": 0,
-                       "data": [{"url": p} for p in pages]
-                       })
-            # Insert data
-            data = enclosure.datastore.get(namespace, {})
-            for key in data:
-                self.send({"type": "mycroft.session.set",
-                           "namespace": namespace,
-                           "data": {key: data[key]}
-                           })
-            namespace_pos += 1
-
-    def on_message(self, message):
-        LOG.info("Received: {}".format(message))
-        msg = json.loads(message)
-        if (msg.get('type') == "mycroft.events.triggered" and
-                (msg.get('event_name') == 'page_gained_focus' or
-                    msg.get('event_name') == 'system.gui.user.interaction')):
-            # System event, a page was changed
-            msg_type = 'gui.page_interaction'
-            msg_data = {'namespace': msg['namespace'],
-                        'page_number': msg['parameters'].get('number'),
-                        'skill_id': msg['parameters'].get('skillId')}
-        elif msg.get('type') == "mycroft.events.triggered":
-            # A normal event was triggered
-            msg_type = '{}.{}'.format(msg['namespace'], msg['event_name'])
-            msg_data = msg['parameters']
-
-        elif msg.get('type') == 'mycroft.session.set':
-            # A value was changed send it back to the skill
-            msg_type = '{}.{}'.format(msg['namespace'], 'set')
-            msg_data = msg['data']
-
-        message = Message(msg_type, msg_data)
-        LOG.info('Forwarding to bus...')
-        self.application.enclosure.bus.emit(message)
-        LOG.info('Done!')
-
-    def write_message(self, *arg, **kwarg):
-        """Wraps WebSocketHandler.write_message() with a lock. """
-        try:
-            asyncio.get_event_loop()
-        except RuntimeError:
-            asyncio.set_event_loop(asyncio.new_event_loop())
-
-        with write_lock:
-            super().write_message(*arg, **kwarg)
-
-    def send(self, data):
-        """Send the given data across the socket as JSON
-
-        Args:
-            data (dict): Data to transmit
-        """
-        s = json.dumps(data)
-        # LOG.info('Sending {}'.format(s))
-        self.write_message(s)
-
-    def check_origin(self, origin):
-        """Disable origin check to make js connections work."""
-        return True
