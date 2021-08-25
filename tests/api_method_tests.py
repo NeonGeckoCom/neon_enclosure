@@ -49,7 +49,7 @@ class TestAPIMethods(unittest.TestCase):
         cls.bus_thread = Process(target=messagebus_service, daemon=False)
         cls.enclosure_thread = Process(target=neon_enclosure_main, kwargs={"config": {"platform": "generic"}},
                                        daemon=False)
-        # cls.bus_thread.start()
+        cls.bus_thread.start()
         cls.enclosure_thread.start()
         cls.bus = MessageBusClient()
         cls.bus.run_in_thread()
