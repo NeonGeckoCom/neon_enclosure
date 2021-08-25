@@ -22,14 +22,25 @@ from neon_utils.logger import LOG
 from neon_enclosure.enclosure.display_manager import \
     init_display_manager_bus_connection
 from neon_enclosure.client.enclosure.base import Enclosure
-from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
 
 try:
     from neon_enclosure.enclosure.audio.pulse_audio import PulseAudio
 except ImportError:  # Catch missing pulsectl module
     PulseAudio = None
+except OSError as e:
+    LOG.error(e)
+    PulseAudio = None
 
-from mycroft.util import connected
+try:
+    from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
+except ImportError:
+    AlsaAudio = None
+
+
+try:
+    from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
+except ImportError:
+    AlsaAudio = None
 
 
 class EnclosureLinux(Enclosure):
@@ -39,21 +50,21 @@ class EnclosureLinux(Enclosure):
     and/or for users of the CLI.
     """
     def __init__(self):
-        super().__init__()
+        super().__init__("linux")
         self._backend = "pulsectl"  # TODO: Read from preference
         if not PulseAudio:
-            self._backend = "alsa"
+            if AlsaAudio:
+                self._backend = "alsa"
+            else:
+                raise ImportError("No pulse or alsa backend available!")
 
         if self._backend == "pulsectl":
             self.audio_system = PulseAudio()
-        else:
+        elif self._backend == "alsa":
             self.audio_system = AlsaAudio()
-        # Notifications from mycroft-core
-        self.bus.on('enclosure.notify.no_internet', self.on_no_internet)
-        # TODO: this requires the Enclosure to be up and running before the training is complete.
-        self.bus.on('mycroft.skills.trained', self.is_device_ready)
+        else:
+            raise ValueError(f"Invalid audio backend defined: {self._backend}")
 
-        self._define_event_handlers()
         self._default_duck = 0.3
         self._pre_duck_level = self.audio_system.get_volume()
         self._pre_mute_level = self.audio_system.get_volume()
@@ -118,49 +129,5 @@ class EnclosureLinux(Enclosure):
         """
         self.audio_system.set_volume(self._pre_duck_level)
 
-    def is_device_ready(self, message):
-        # Bus service assumed to be alive if messages sent and received
-        # Enclosure assumed to be alive if this method is running
-        services = {'audio': False, 'speech': False, 'skills': False}
-        is_ready = self.check_services_ready(services)
-
-        if is_ready:
-            LOG.info("Mycroft is all loaded and ready to roll!")
-            self.bus.emit(Message('mycroft.ready'))
-
-        return is_ready
-
-    def check_services_ready(self, services):
-        """Report if all specified services are ready.
-
-        services (iterable): service names to check.
-        """
-        for ser in services:
-            services[ser] = False
-            response = self.bus.wait_for_response(Message(
-                                'mycroft.{}.is_ready'.format(ser)), timeout=60)
-            if response and response.data['status']:
-                services[ser] = True
-        return all([services[ser] for ser in services])
-
-    def on_no_internet(self, event=None):
-        if connected():
-            # One last check to see if connection was established
-            return
-
-        if time.time() - Enclosure._last_internet_notification < 30:
-            # don't bother the user with multiple notifications with 30 secs
-            return
-
-        Enclosure._last_internet_notification = time.time()
-
     def speak(self, text):
         self.bus.emit(Message("speak", {'utterance': text}))
-
-    def _define_event_handlers(self):
-        """Assign methods to act upon message bus events."""
-        self.bus.on('mycroft.volume.set', self.on_volume_set)
-        self.bus.on('mycroft.volume.get', self.on_volume_get)
-        self.bus.on('mycroft.volume.mute', self.on_volume_mute)
-        self.bus.on('mycroft.volume.duck', self.on_volume_duck)
-        self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)

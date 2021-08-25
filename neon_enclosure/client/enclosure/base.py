@@ -12,12 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import time
+
+from abc import abstractmethod
 from collections import namedtuple
 from threading import Lock
 from mycroft_bus_client import MessageBusClient, Message
 from ovos_utils.log import LOG
 from neon_utils.configuration_utils import get_mycroft_compatible_config
 
+from mycroft.util import connected
 
 Namespace = namedtuple('Namespace', ['name', 'pages'])
 write_lock = Lock()
@@ -50,12 +54,13 @@ def _get_page_data(message):
 
 
 class Enclosure:
-    def __init__(self):
+    def __init__(self, enclosure_type: str):
         # Load full config
         config = get_mycroft_compatible_config()
         self.lang = config['lang']
         self.config = config.get("enclosure")
-        LOG.info(config)
+        self.enclosure_type = enclosure_type
+        # LOG.info(config)
         config["gui_websocket"] = config.get("gui_websocket", {"host": "0.0.0.0",
                                                                "base_port": 18181,
                                                                "route": "/gui",
@@ -103,6 +108,11 @@ class Enclosure:
         self.bus.on("gui.event.send", self.on_gui_send_event)
         self.bus.on("gui.status.request", self.handle_gui_status_request)
 
+        # TODO: this requires the Enclosure to be up and running before the training is complete.
+        self.bus.once('mycroft.skills.trained', self.is_device_ready)
+
+        self._define_event_handlers()
+
     def run(self):
         """Start the Enclosure after it has been constructed."""
         # Allow exceptions to be raised to the Enclosure Service
@@ -112,6 +122,103 @@ class Enclosure:
     def stop(self):
         """Perform any enclosure shutdown processes."""
         pass
+
+    @abstractmethod
+    def on_volume_set(self, message):
+        """
+        Handler for "mycroft.volume.set".
+        """
+
+    @abstractmethod
+    def on_volume_get(self, message):
+        """
+        Handler for "mycroft.volume.get".
+        """
+
+    @abstractmethod
+    def on_volume_mute(self, message):
+        """
+        Handler for "mycroft.volume.mute".
+        """
+
+    @abstractmethod
+    def on_volume_duck(self, message):
+        """
+        Handler for "mycroft.volume.duck".
+        """
+
+    @abstractmethod
+    def on_volume_unduck(self, message):
+        """
+        Handler for "mycroft.volume.unduck".
+        """
+
+    def on_get_enclosure(self, message):
+        """
+        Handler for "neon.get_enclosure"
+        """
+        self.bus.emit(message.response({"enclosure": self.enclosure_type}))
+
+    def on_no_internet(self, message):
+        """
+        Handler for "enclosure.notify.no_internet
+        """
+        if connected():
+            # One last check to see if connection was established
+            return
+
+        if time.time() - Enclosure._last_internet_notification < 30:
+            # don't bother the user with multiple notifications with 30 secs
+            return
+
+        Enclosure._last_internet_notification = time.time()
+
+    def is_device_ready(self, message):
+        is_ready = False
+        # Bus service assumed to be alive if messages sent and received
+        # Enclosure assumed to be alive if this method is running
+        services = {'audio': False, 'speech': False, 'skills': False}
+        start = time.monotonic()
+        while not is_ready:
+            is_ready = self.check_services_ready(services)
+            if is_ready:
+                break
+            elif time.monotonic() - start >= 60:
+                raise Exception('Timeout waiting for services start.')
+            else:
+                time.sleep(3)
+
+        if is_ready:
+            LOG.info("Mycroft is all loaded and ready to roll!")
+            self.bus.emit(Message('mycroft.ready'))
+
+        return is_ready
+
+    def check_services_ready(self, services):
+        """Report if all specified services are ready.
+
+        services (iterable): service names to check.
+        """
+        for ser in services:
+            services[ser] = False
+            response = self.bus.wait_for_response(Message(
+                                'mycroft.{}.is_ready'.format(ser)))
+            if response and response.data['status']:
+                services[ser] = True
+        return all([services[ser] for ser in services])
+
+    def _define_event_handlers(self):
+        """Assign methods to act upon message bus events."""
+        self.bus.on('mycroft.volume.set', self.on_volume_set)
+        self.bus.on('mycroft.volume.get', self.on_volume_get)
+        self.bus.on('mycroft.volume.mute', self.on_volume_mute)
+        self.bus.on('mycroft.volume.duck', self.on_volume_duck)
+        self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
+
+        # Notifications from mycroft-core
+        self.bus.on('enclosure.notify.no_internet', self.on_no_internet)
+
+        self.bus.on('neon.get_enclosure', self.on_get_enclosure)
 
     ######################################################################
     # GUI client API

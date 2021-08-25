@@ -13,6 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from ovos_utils.log import LOG
 
 from neon_enclosure.enclosure.audio.audio_system import AudioSystem
 import pulsectl
@@ -28,17 +29,24 @@ class PulseAudio(AudioSystem):
         return float(level/100)
 
     def set_volume(self, vol: int):
-        self.pulse.volume_set_all_chans(self._sink, self._translate_level(vol))
+        try:
+            self.pulse.volume_set_all_chans(self._sink, self._translate_level(vol))
+        except Exception as e:
+            LOG.error(e)
 
     def get_volume(self) -> int:
-        volume = 100 * self.pulse.volume_get_all_chans(self._sink)
-        return volume
+        try:
+            volume = 100 * self.pulse.volume_get_all_chans(self._sink)
+            return volume
+        except Exception as e:
+            LOG.error(e)
+            return -1
 
     def set_mute(self, mute: bool):
         self.pulse.mute(self._sink, mute)
 
     def get_mute_state(self) -> bool:
-        return self._sink.mute
+        return self._sink.mute == 1
 
     def set_input_level(self, level: int):
         pass

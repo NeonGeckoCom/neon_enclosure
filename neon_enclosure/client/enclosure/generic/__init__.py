@@ -35,13 +35,8 @@ class EnclosureGeneric(Enclosure):
     and/or for users of the CLI.
     """
 
-    _last_internet_notification = 0
-
     def __init__(self):
-        super().__init__()
-
-        # Notifications from mycroft-core
-        self.bus.on('enclosure.notify.no_internet', self.on_no_internet)
+        super().__init__("generic")
         # TODO: this requires the Enclosure to be up and running before the
         # training is complete.
         self.bus.on('mycroft.skills.trained', self.is_device_ready)
@@ -50,69 +45,26 @@ class EnclosureGeneric(Enclosure):
         # NOTE: this is a temporary place to connect the display manager
         init_display_manager_bus_connection()
 
-        # verify internet connection and prompt user on bootup if needed
-        if not connected():
-            # We delay this for several seconds to ensure that the other
-            # clients are up and connected to the messagebus in order to
-            # receive the "speak".  This was sometimes happening too
-            # quickly and the user wasn't notified what to do.
-            Timer(5, self._do_net_check).start()
+    def on_volume_set(self, message):
+        self.bus.emit(Message("hardware.volume", {
+            "volume": None,
+            "error": "Not Implemented"}, context={"source": ["enclosure"]}))
 
-    def is_device_ready(self, message):
-        is_ready = False
-        # Bus service assumed to be alive if messages sent and received
-        # Enclosure assumed to be alive if this method is running
-        services = {'audio': False, 'speech': False, 'skills': False}
-        start = time.monotonic()
-        while not is_ready:
-            is_ready = self.check_services_ready(services)
-            if is_ready:
-                break
-            elif time.monotonic() - start >= 60:
-                raise Exception('Timeout waiting for services start.')
-            else:
-                time.sleep(3)
+    def on_volume_get(self, message):
+        self.bus.emit(
+            message.response(
+                data={'percent': None, 'muted': False, "error": "Not Implemented"}))
 
-        if is_ready:
-            LOG.info("Mycroft is all loaded and ready to roll!")
-            self.bus.emit(Message('mycroft.ready'))
+    def on_volume_mute(self, message):
+        pass
 
-        return is_ready
+    def on_volume_duck(self, message):
+        pass
 
-    def check_services_ready(self, services):
-        """Report if all specified services are ready.
+    def on_volume_unduck(self, message):
+        pass
 
-        services (iterable): service names to check.
-        """
-        for ser in services:
-            services[ser] = False
-            response = self.bus.wait_for_response(Message(
-                                'mycroft.{}.is_ready'.format(ser)))
-            if response and response.data['status']:
-                services[ser] = True
-        return all([services[ser] for ser in services])
-
-    def on_no_internet(self, event=None):
-        if connected():
-            # One last check to see if connection was established
-            return
-
-        if time.time() - Enclosure._last_internet_notification < 30:
-            # don't bother the user with multiple notifications with 30 secs
-            return
-
-        Enclosure._last_internet_notification = time.time()
-
-        # TODO: This should go into EnclosureMark1 subclass of Enclosure.
-        if has_been_paired():
-            # Handle the translation within that code.
-            self.bus.emit(Message("speak", {
-                'utterance': "This device is not connected to the Internet. "
-                             "Either plug in a network cable or set up your "
-                             "wifi connection."}))
-        else:
-            # enter wifi-setup mode automatically
-            self.bus.emit(Message('system.wifi.setup', {'lang': self.lang}))
+    _last_internet_notification = 0
 
     def speak(self, text):
         self.bus.emit(Message("speak", {'utterance': text}))
