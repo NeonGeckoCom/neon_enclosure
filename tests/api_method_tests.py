@@ -68,7 +68,7 @@ class TestAPIMethods(unittest.TestCase):
         mute = resp.data.get("muted")
 
         self.assertIsInstance(vol, float)
-        self.assertIsInstance(mute, bool)
+        self.assertIsNotNone(mute)
 
 
 if __name__ == '__main__':
