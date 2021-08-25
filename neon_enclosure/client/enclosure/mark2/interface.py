@@ -150,9 +150,8 @@ class chaseLedThread(threading.Thread):
 class EnclosureMark2(Enclosure):
     def __init__(self):
         LOG.info('** Initialize EnclosureMark2 **')
-        super().__init__()
+        super().__init__("mark2")
         self.display_bus_client = None
-        self._define_event_handlers()
         self.finished_loading = False
         self.active_screen = 'loading'
         self.paused_screen = None
@@ -207,45 +206,6 @@ class EnclosureMark2(Enclosure):
         self.default_caps = EnclosureCapabilities()
 
         LOG.info('** EnclosureMark2 initalized **')
-        self.bus.once('mycroft.skills.trained', self.is_device_ready)
-
-
-    def is_device_ready(self, message):
-        is_ready = False
-        # Bus service assumed to be alive if messages sent and received
-        # Enclosure assumed to be alive if this method is running
-        services = {'audio': False, 'speech': False, 'skills': False}
-        start = time.monotonic()
-        while not is_ready:
-            is_ready = self.check_services_ready(services)
-            if is_ready:
-                break
-            elif time.monotonic() - start >= 60:
-                raise Exception('Timeout waiting for services start.')
-            else:
-                time.sleep(3)
-
-        if is_ready:
-            LOG.info("All Mycroft Services have reported ready.")
-            if connected():
-                self.bus.emit(Message('mycroft.ready'))
-            else:
-                self.bus.emit(Message('mycroft.wifi.setup'))
-
-        return is_ready
-
-    def check_services_ready(self, services):
-        """Report if all specified services are ready.
-
-        services (iterable): service names to check.
-        """
-        for ser in services:
-            services[ser] = False
-            response = self.bus.wait_for_response(Message(
-                'mycroft.{}.is_ready'.format(ser)))
-            if response and response.data['status']:
-                services[ser] = True
-        return all([services[ser] for ser in services])
 
     def async_volume_handler(self, vol):
         LOG.error("ASYNC SET VOL PASSED IN %s" % (vol,))
@@ -259,10 +219,11 @@ class EnclosureMark2(Enclosure):
 
     def _define_event_handlers(self):
         """Assign methods to act upon message bus events."""
-        self.bus.on('mycroft.volume.set', self.on_volume_set)
-        self.bus.on('mycroft.volume.get', self.on_volume_get)
-        self.bus.on('mycroft.volume.duck', self.on_volume_duck)
-        self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
+        super()._define_event_handlers()
+        # self.bus.on('mycroft.volume.set', self.on_volume_set)
+        # self.bus.on('mycroft.volume.get', self.on_volume_get)
+        # self.bus.on('mycroft.volume.duck', self.on_volume_duck)
+        # self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
         self.bus.on('recognizer_loop:record_begin', self.handle_start_recording)
         self.bus.on('recognizer_loop:record_end', self.handle_stop_recording)
         self.bus.on('recognizer_loop:audio_output_end', self.handle_end_audio)
