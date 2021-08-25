@@ -55,7 +55,9 @@ setup(
     install_requires=get_requirements("requirements.txt"),
     author='Neongecko',
     author_email='developers@neon.ai',
-    description=long_description,
+    description="Neon Enclosure Module",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     entry_points={
         'console_scripts': [
             'neon_enclosure_client=neon_enclosure.client.enclosure.__main__:main'
