@@ -46,7 +46,8 @@ class TestAPIMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.bus_thread = Process(target=messagebus_service, daemon=False)
-        cls.enclosure_thread = Process(target=neon_enclosure_main, daemon=False)
+        cls.enclosure_thread = Process(target=neon_enclosure_main, kwargs={"config": {"platform": "generic"}},
+                                       daemon=False)
         cls.bus_thread.start()
         cls.enclosure_thread.start()
         cls.bus = MessageBusClient()
@@ -61,7 +62,7 @@ class TestAPIMethods(unittest.TestCase):
         cls.bus_thread.terminate()
         cls.enclosure_thread.terminate()
 
-    def test_services_running(self):
+    def test_volume_get(self):
         resp = self.bus.wait_for_response(Message("mycroft.volume.get"))
         self.assertIsInstance(resp, Message)
         vol = resp.data.get("percent")
