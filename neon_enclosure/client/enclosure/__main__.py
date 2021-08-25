@@ -17,6 +17,8 @@
 This provides any "enclosure" specific functionality, for example GUI or
 control over the Mark-1 Faceplate.
 """
+from mycroft.util.process_utils import StatusCallbackMap, ProcessStatus
+
 from neon_enclosure.util.hardware_capabilities import EnclosureCapabilities
 
 from neon_utils.configuration_utils import get_neon_device_type
@@ -80,6 +82,10 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, co
     enclosure = create_enclosure(platform)
 
     if enclosure:
+        callbacks = StatusCallbackMap(on_ready=ready_hook, on_error=error_hook,
+                                      on_stopping=stopping_hook)
+        status = ProcessStatus('enclosure', enclosure.bus, callbacks)
+
         # crude attempt to deal with hardware beyond custom hat
         # note - if using a Mark2 you will also have
         # enclosure.m2enc.capabilities
@@ -98,12 +104,12 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, co
             LOG.info("Starting Client Enclosure!")
             reset_sigint_handler()
             enclosure.run()
-            ready_hook()
+            status.set_ready()
             wait_for_exit_signal()
             enclosure.stop()
-            stopping_hook()
+            status.set_stopping()
         except Exception as e:
-            error_hook(repr(e))
+            status.set_error(e)
     else:
         LOG.info("No enclosure available for this hardware, running headless")
 
