@@ -29,6 +29,7 @@ from multiprocessing import Process
 
 from mycroft_bus_client import MessageBusClient, Message
 from neon_utils.configuration_utils import get_neon_local_config
+from neon_utils.logger import LOG
 from mycroft.messagebus.service.__main__ import main as messagebus_service
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
@@ -65,6 +66,13 @@ class TestAPIMethods(unittest.TestCase):
         super(TestAPIMethods, cls).tearDownClass()
         cls.bus_thread.terminate()
         cls.enclosure_thread.terminate()
+        try:
+            if cls.bus_thread.is_alive():
+                cls.bus_thread.kill()
+            if cls.enclosure_thread.is_alive():
+                cls.enclosure_thread.kill()
+        except Exception as e:
+            LOG.error(e)
 
     def test_get_enclosure(self):
         resp = self.bus.wait_for_response(Message("neon.get_enclosure"))
