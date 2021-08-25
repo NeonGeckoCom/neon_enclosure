@@ -53,7 +53,7 @@ class EnclosureLinux(Enclosure):
     and/or for users of the CLI.
     """
     def __init__(self):
-        super().__init__()
+        super().__init__("linux")
         self._backend = "pulsectl"  # TODO: Read from preference
         if not PulseAudio:
             if AlsaAudio:

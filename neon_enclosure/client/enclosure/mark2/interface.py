@@ -150,7 +150,7 @@ class chaseLedThread(threading.Thread):
 class EnclosureMark2(Enclosure):
     def __init__(self):
         LOG.info('** Initialize EnclosureMark2 **')
-        super().__init__()
+        super().__init__("mark2")
         self.display_bus_client = None
         self._define_event_handlers()
         self.finished_loading = False

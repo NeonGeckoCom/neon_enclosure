@@ -59,11 +59,12 @@ def _get_page_data(message):
 
 
 class Enclosure:
-    def __init__(self):
+    def __init__(self, enclosure_type: str):
         # Load full config
         config = get_mycroft_compatible_config()
         self.lang = config['lang']
         self.config = config.get("enclosure")
+        self.enclosure_type = enclosure_type
         # LOG.info(config)
         config["gui_websocket"] = config.get("gui_websocket", {"host": "0.0.0.0",
                                                                "base_port": 18181,
@@ -152,6 +153,14 @@ class Enclosure:
         Handler for "mycroft.volume.unduck".
         """
 
+    def on_get_enclosure(self, message):
+        """
+        Handler for "neon.get_enclosure"
+        :param message:
+        :return:
+        """
+        self.bus.emit(message.response({"enclosure": self.enclosure_type}))
+
     def _define_event_handlers(self):
         """Assign methods to act upon message bus events."""
         self.bus.on('mycroft.volume.set', self.on_volume_set)
@@ -159,6 +168,8 @@ class Enclosure:
         self.bus.on('mycroft.volume.mute', self.on_volume_mute)
         self.bus.on('mycroft.volume.duck', self.on_volume_duck)
         self.bus.on('mycroft.volume.unduck', self.on_volume_unduck)
+
+        self.bus.on('neon.get_enclosure', self.on_get_enclosure)
 
     ######################################################################
     # GUI client API

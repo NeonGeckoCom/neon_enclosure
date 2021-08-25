@@ -48,13 +48,17 @@ class TestAPIMethods(unittest.TestCase):
         cls.bus_thread = Process(target=messagebus_service, daemon=False)
         cls.enclosure_thread = Process(target=neon_enclosure_main, kwargs={"config": {"platform": "generic"}},
                                        daemon=False)
-        cls.bus_thread.start()
+        # cls.bus_thread.start()
         cls.enclosure_thread.start()
         cls.bus = MessageBusClient()
         cls.bus.run_in_thread()
         while not cls.bus.started_running:
             sleep(1)
-        sleep(5)
+        alive = False
+        while not alive:
+            message = cls.bus.wait_for_response(Message("mycroft.enclosure.is_ready"))
+            if message:
+                alive = message.data.get("status")
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -62,14 +66,10 @@ class TestAPIMethods(unittest.TestCase):
         cls.bus_thread.terminate()
         cls.enclosure_thread.terminate()
 
-    def test_volume_get(self):
-        resp = self.bus.wait_for_response(Message("mycroft.volume.get"))
+    def test_get_enclosure(self):
+        resp = self.bus.wait_for_response(Message("neon.get_enclosure"))
         self.assertIsInstance(resp, Message)
-        vol = resp.data.get("percent")
-        mute = resp.data.get("muted")
-
-        self.assertIsInstance(vol, float)
-        self.assertIsNotNone(mute)
+        self.assertEqual(resp.data["enclosure"], "generic")
 
 
 if __name__ == '__main__':

@@ -57,7 +57,7 @@ class EnclosureGeneric(Enclosure):
     _last_internet_notification = 0
 
     def __init__(self):
-        super().__init__()
+        super().__init__("generic")
 
         # Notifications from mycroft-core
         self.bus.on('enclosure.notify.no_internet', self.on_no_internet)
@@ -76,6 +76,7 @@ class EnclosureGeneric(Enclosure):
             # receive the "speak".  This was sometimes happening too
             # quickly and the user wasn't notified what to do.
             Timer(5, self._do_net_check).start()
+        self._define_event_handlers()
 
     def is_device_ready(self, message):
         is_ready = False
