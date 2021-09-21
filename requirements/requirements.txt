@@ -4,3 +4,4 @@ tornado==6.0.3
 RPi.GPIO==0.7.0
 smbus2==0.4.0
 pulsectl~=21.5
+pulse
