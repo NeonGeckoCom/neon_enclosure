@@ -17,7 +17,6 @@
 This provides any "enclosure" specific functionality, for example GUI or
 control over the Mark-1 Faceplate.
 """
-from mycroft.util.process_utils import StatusCallbackMap, ProcessStatus
 
 from neon_enclosure.util.hardware_capabilities import EnclosureCapabilities
 
@@ -26,6 +25,7 @@ from ovos_utils import wait_for_exit_signal
 from neon_utils import LOG
 
 from mycroft.util import reset_sigint_handler
+from mycroft.util.process_utils import StatusCallbackMap, ProcessStatus
 
 
 def on_ready():
@@ -51,17 +51,17 @@ def create_enclosure(platform):
     """
     if platform == "mycroft_mark_2":
         LOG.info("Creating Mark II Enclosure")
-        from neon_enclosure.client.enclosure.mark2 import EnclosureMark2
+        from neon_enclosure.client.mark2 import EnclosureMark2
         enclosure = EnclosureMark2()
     elif platform in ("linux", "ubuntu"):
-        from neon_enclosure.client.enclosure.linux import EnclosureLinux
+        from neon_enclosure.client.linux import EnclosureLinux
         enclosure = EnclosureLinux()
     else:
         LOG.info("Creating generic enclosure, platform='{}'".format(platform))
 
         # TODO: Mechanism to load from elsewhere.  E.g. read a script path from
         # the mycroft.conf, then load/launch that script.
-        from neon_enclosure.client.enclosure.generic import EnclosureGeneric
+        from neon_enclosure.client.generic import EnclosureGeneric
         enclosure = EnclosureGeneric()
 
     return enclosure
@@ -96,9 +96,9 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, co
         if platform == "mycroft_mark_2":
             LOG.info("Mark2 detected[%s], additional capabilities ===>%s" % (enclosure.m2enc.board_type,
                                                                              enclosure.m2enc.capabilities))
-            LOG.info("Leds ===>%s" % (enclosure.m2enc.leds.capabilities))
-            LOG.info("Volume ===>%s" % (enclosure.m2enc.hardware_volume.capabilities))
-            LOG.info("Switches ===>%s" % (enclosure.m2enc.switches.capabilities))
+            LOG.info("Leds ===>%s" % enclosure.m2enc.leds.capabilities)
+            LOG.info("Volume ===>%s" % enclosure.m2enc.hardware_volume.capabilities)
+            LOG.info("Switches ===>%s" % enclosure.m2enc.switches.capabilities)
 
         try:
             LOG.info("Starting Client Enclosure!")

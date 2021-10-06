@@ -1,7 +1,9 @@
 import subprocess
 
+from neon_utils import LOG
 
-class EnclosureCapabilities():
+
+class EnclosureCapabilities:
     """
     we want to know about any keyboards, 
     mice, and screens attached to the system.
@@ -15,7 +17,8 @@ class EnclosureCapabilities():
     Example Mark2 Output with mouse and keyboard plugged in:
         (.venv) mycroft@localhost:~$ python hdw_test.py
         Kbds:[{'name': 'Lite-On Technology Corp. USB Multimedia Keyboard', 'extra': ''}]
-        Mice:[{'name': 'PIXART USB OPTICAL MOUSE', 'extra': ''}, {'name': 'FT5406 memory based driver', 'extra': 'Touch Screen'}]
+        Mice:[{'name': 'PIXART USB OPTICAL MOUSE', 'extra': ''},
+              {'name': 'FT5406 memory based driver', 'extra': 'Touch Screen'}]
         Screens:[{'name': 'DRM emulated', 'resolution': '800,480', 'pel_size': '32', 'extra': ''}]
 
     Example Mark2 Output with nothing plugged in.
@@ -40,7 +43,8 @@ class EnclosureCapabilities():
         self.keyboards = self.caps['keyboards']
         self.screens = self.caps['screens']
 
-    def execute_cmd(self, cmd):
+    @staticmethod
+    def execute_cmd(cmd):
         process = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
@@ -51,16 +55,15 @@ class EnclosureCapabilities():
 
         try:
             out = out.decode('utf8')
-        except:
-            pass
+        except Exception as e:
+            LOG.error(e)
 
         try:
             err = err.decode('utf8')
-        except:
-            pass
+        except Exception as e:
+            LOG.error(e)
 
         return out, err
-
 
     def _get_capabilities(self):
         # query input devices
@@ -69,9 +72,10 @@ class EnclosureCapabilities():
         out, err = self.execute_cmd(cmd)
 
         if err:
-            #print("Error trying to read input devices:%s" % (err,))
+            # print("Error trying to read input devices:%s" % (err,))
             pass
         else:
+            dev_name = None
             for line in out.split("\n"):
                 if line != '':
                     if line.startswith(self.name_line):
@@ -79,13 +83,13 @@ class EnclosureCapabilities():
                         dev_name = dev_name[:-1]
                     elif line.startswith(self.keyboard_line):
                         kbd_obj = {'name': dev_name, 'extra': ''}
-                        self.keyboards.append( kbd_obj )
+                        self.keyboards.append(kbd_obj)
                     elif line.startswith(self.mouse_line):
                         extra = ''
                         if dev_name.startswith("FT5406 memory based driver"):
                             extra = "Touch Screen"
                         mouse_obj = {'name': dev_name, 'extra': extra}
-                        self.mice.append( mouse_obj )
+                        self.mice.append(mouse_obj)
 
         # query output devices. 
 
@@ -94,7 +98,7 @@ class EnclosureCapabilities():
         out, err = self.execute_cmd(cmd)
 
         if err:
-            #print("Error trying to read output devices:%s" % (err,))
+            # print("Error trying to read output devices:%s" % (err,))
             pass
         else:
             screen_name = out.strip()
@@ -104,7 +108,7 @@ class EnclosureCapabilities():
         out, err = self.execute_cmd(cmd)
 
         if err:
-            #print("Error trying to read output devices:%s" % (err,))
+            # print("Error trying to read output devices:%s" % (err,))
             pass
         else:
             screen_resolution = out.strip()
@@ -114,16 +118,16 @@ class EnclosureCapabilities():
         out, err = self.execute_cmd(cmd)
 
         if err:
-            #print("Error trying to read output devices:%s" % (err,))
+            # print("Error trying to read output devices:%s" % (err,))
             pass
         else:
             screen_depth = out.strip()
 
         if not (screen_name == '' and screen_resolution == ''):
-            self.screens = [ {'name': screen_name, 'resolution': screen_resolution, 'pel_size': screen_depth, 'extra': ''} ]
+            self.screens = [{'name': screen_name, 'resolution': screen_resolution,
+                             'pel_size': screen_depth, 'extra': ''}]
 
-
-        capabilities = {'keyboards':self.keyboards, 'mice':self.mice, 'screens':self.screens}
+        capabilities = {'keyboards': self.keyboards, 'mice': self.mice, 'screens': self.screens}
         return capabilities
 
 

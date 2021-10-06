@@ -14,7 +14,7 @@
 
 from smbus2 import SMBus
 from neon_utils import LOG
-from neon_enclosure.enclosure.hardware.MycroftVolume.MycroftVolume import MycroftVolume
+from neon_enclosure.components.hardware.MycroftVolume.MycroftVolume import MycroftVolume
 import time
 from math import log, exp
 

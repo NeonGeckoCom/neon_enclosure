@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from neon_enclosure.enclosure.hardware.MycroftVolume.MycroftVolume import MycroftVolume
+from neon_enclosure.components.hardware.MycroftVolume.MycroftVolume import MycroftVolume
 
 from subprocess import call, check_output, CalledProcessError
 

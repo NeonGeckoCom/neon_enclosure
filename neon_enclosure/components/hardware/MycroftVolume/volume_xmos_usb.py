@@ -14,7 +14,7 @@
 
 import os
 import time
-from neon_enclosure.enclosure.hardware.MycroftVolume.MycroftVolume import MycroftVolume
+from neon_enclosure.components.hardware.MycroftVolume.MycroftVolume import MycroftVolume
 
 
 class Volume(MycroftVolume):

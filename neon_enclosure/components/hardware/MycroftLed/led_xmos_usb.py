@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-from neon_enclosure.enclosure.hardware.MycroftLed.MycroftLed import MycroftLed
+from neon_enclosure.components.hardware.MycroftLed.MycroftLed import MycroftLed
 
 
 class Led(MycroftLed):

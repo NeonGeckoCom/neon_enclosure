@@ -36,7 +36,7 @@ class HardwareEnclosure:
         self.last_action = time.time()
         self.last_mute = -1
 
-        driver_dir = "neon_enclosure.enclosure.hardware"
+        driver_dir = "neon_enclosure.components.hardware"
 
         capabilities_module = driver_dir + ".%s" % (self.enclosure_type,)
         module = importlib.import_module(capabilities_module)
@@ -93,7 +93,7 @@ class HardwareEnclosure:
 
     def handle_watchdog(self):
         # clear the volume leds
-        self.leds.fill( self.palette.BLACK )
+        self.leds.fill(self.palette.BLACK)
         self.watchdog = None
 
     def cancel_watchdog(self):
@@ -105,17 +105,17 @@ class HardwareEnclosure:
         vol = int(vol * 10)
 
         for x in range(vol):
-            new_leds.append( self.palette.BLUE )
+            new_leds.append(self.palette.BLUE)
 
         for x in range(self.leds.num_leds - vol):
-            new_leds.append( self.palette.BLACK )
+            new_leds.append(self.palette.BLACK)
 
-        self.leds.set_leds( new_leds )
+        self.leds.set_leds(new_leds)
         self.cancel_watchdog()
         self.watchdog = threading.Timer(self.watchdog_timeout,
                                         self.handle_watchdog)
         self.watchdog.start()
-        if self.client_volume_handler != None:
+        if self.client_volume_handler:
             self.client_volume_handler(vol)
 
     def handle_action(self):
@@ -145,7 +145,7 @@ class HardwareEnclosure:
 
     def handle_vol_down(self):
         self.shadow_volume = self.hardware_volume.get_volume()
-        LOG.debug("Mark2:HardwareEnclosure:handle_vol_down()-was %s" % (self.shadow_volume))
+        LOG.debug("Mark2:HardwareEnclosure:handle_vol_down()-was %s" % self.shadow_volume)
         if self.shadow_volume > self.min_volume:
             self.shadow_volume -= self.volume_increment
 
@@ -154,7 +154,7 @@ class HardwareEnclosure:
 
     def handle_vol_up(self):
         self.shadow_volume = self.hardware_volume.get_volume()
-        LOG.debug("Mark2:HardwareEnclosure:handle_vol_up()-was %s" % (self.shadow_volume))
+        LOG.debug("Mark2:HardwareEnclosure:handle_vol_up()-was %s" % self.shadow_volume)
         if self.shadow_volume < self.max_volume:
             self.shadow_volume += self.volume_increment
 
@@ -164,7 +164,7 @@ class HardwareEnclosure:
     def terminate(self):
         LOG.info("Mark2:HardwareEnclosure:terminate()")
         self.cancel_watchdog()
-        self.leds.fill( self.palette.BLACK )
+        self.leds.fill(self.palette.BLACK)
         self.switches.terminate()
         self.switches._running = False
 

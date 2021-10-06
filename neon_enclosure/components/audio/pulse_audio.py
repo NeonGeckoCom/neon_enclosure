@@ -13,28 +13,40 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from neon_utils import LOG
 
-from neon_enclosure.enclosure.audio.audio_system import AudioSystem
-import alsaaudio
+from neon_enclosure.components.audio.audio_system import AudioSystem
+import pulsectl
 
 
-class AlsaAudio(AudioSystem):
+class PulseAudio(AudioSystem):
     def __init__(self):
-        self.alsa = alsaaudio.Mixer()
+        self.pulse = pulsectl.Pulse("OVOS-Enclosure")
+        self._sink = self.pulse.sink_list()[0]  # TODO: Better method for this DM
+
+    @staticmethod
+    def _translate_level(level: int) -> float:
+        return float(level/100)
 
     def set_volume(self, vol: int):
-        self.alsa.setvolume(vol)
+        try:
+            self.pulse.volume_set_all_chans(self._sink, self._translate_level(vol))
+        except Exception as e:
+            LOG.error(e)
 
     def get_volume(self) -> int:
-        levels = self.alsa.getvolume()
-        volume = sum(levels) / len(levels)
-        return volume
+        try:
+            volume = 100 * self.pulse.volume_get_all_chans(self._sink)
+            return volume
+        except Exception as e:
+            LOG.error(e)
+            return -1
 
     def set_mute(self, mute: bool):
-        self.alsa.setmute(mute)
+        self.pulse.mute(self._sink, mute)
 
     def get_mute_state(self) -> bool:
-        return any([i for i in self.alsa.getmute() if i == 1])
+        return self._sink.mute == 1
 
     def set_input_level(self, level: int):
         pass

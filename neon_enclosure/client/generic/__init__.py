@@ -13,17 +13,16 @@
 # limitations under the License.
 
 import time
-from threading import Timer
 from mycroft_bus_client import Message
 from neon_utils import LOG
 import mycroft.dialog
 from mycroft.api import has_been_paired
 from mycroft.audio import wait_while_speaking
-from neon_enclosure.enclosure.display_manager import \
+from neon_enclosure.components.display_manager import \
     init_display_manager_bus_connection
 from mycroft.util import connected
 
-from neon_enclosure.client.enclosure.base import Enclosure
+from neon_enclosure.client.base import Enclosure
 
 LOG.name = "neon-enclosure"
 

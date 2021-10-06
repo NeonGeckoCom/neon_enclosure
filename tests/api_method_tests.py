@@ -19,7 +19,7 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 # USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from time import sleep, time
+from time import sleep
 
 import os
 import sys
@@ -33,7 +33,7 @@ from neon_utils.logger import LOG
 from mycroft.messagebus.service.__main__ import main as messagebus_service
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from neon_enclosure.client.enclosure.__main__ import main as neon_enclosure_main
+from neon_enclosure.__main__ import main as neon_enclosure_main
 
 TEST_CONFIG = get_neon_local_config(os.path.dirname(__file__))
 TEST_CONFIG["devVars"]["devType"] = "generic"

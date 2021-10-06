@@ -15,7 +15,7 @@
 import threading
 import subprocess
 import time
-from neon_enclosure.enclosure.hardware.MycroftSwitch.MycroftSwitch import MycroftSwitch
+from neon_enclosure.components.hardware.MycroftSwitch.MycroftSwitch import MycroftSwitch
 
 
 class Switch(MycroftSwitch):

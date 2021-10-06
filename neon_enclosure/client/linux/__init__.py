@@ -14,17 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-
 from mycroft_bus_client import Message
 from neon_utils.logger import LOG
 
-from neon_enclosure.enclosure.display_manager import \
+from neon_enclosure.components.display_manager import \
     init_display_manager_bus_connection
-from neon_enclosure.client.enclosure.base import Enclosure
+from neon_enclosure.client.base import Enclosure
 
 try:
-    from neon_enclosure.enclosure.audio.pulse_audio import PulseAudio
+    from neon_enclosure.components.audio.pulse_audio import PulseAudio
 except ImportError:  # Catch missing pulsectl module
     PulseAudio = None
 except OSError as e:
@@ -32,13 +30,13 @@ except OSError as e:
     PulseAudio = None
 
 try:
-    from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
+    from neon_enclosure.components.audio.alsa_audio import AlsaAudio
 except ImportError:
     AlsaAudio = None
 
 
 try:
-    from neon_enclosure.enclosure.audio.alsa_audio import AlsaAudio
+    from neon_enclosure.components.audio.alsa_audio import AlsaAudio
 except ImportError:
     AlsaAudio = None
 
