@@ -23,7 +23,7 @@ from neon_enclosure.util.hardware_capabilities import EnclosureCapabilities
 
 from neon_utils.configuration_utils import get_neon_device_type
 from ovos_utils import wait_for_exit_signal
-from ovos_utils.log import LOG
+from neon_utils import LOG
 
 from mycroft.util import reset_sigint_handler
 

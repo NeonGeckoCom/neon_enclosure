@@ -18,7 +18,7 @@ import time
 from ovos_utils.signal import create_signal
 import RPi.GPIO as GPIO
 import os
-from ovos_utils.log import LOG
+from neon_utils import LOG
 
 
 class HardwareEnclosure:

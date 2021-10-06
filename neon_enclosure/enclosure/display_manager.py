@@ -39,7 +39,7 @@ import os
 
 from mycroft_bus_client import MessageBusClient
 from ovos_utils.signal import get_ipc_directory
-from ovos_utils.log import LOG
+from neon_utils import LOG
 
 
 def _write_data(dictionary):

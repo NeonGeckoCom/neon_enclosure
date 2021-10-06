@@ -18,7 +18,7 @@ from abc import abstractmethod
 from collections import namedtuple
 from threading import Lock
 from mycroft_bus_client import MessageBusClient, Message
-from ovos_utils.log import LOG
+from neon_utils import LOG
 from neon_utils.configuration_utils import get_mycroft_compatible_config
 
 from mycroft.util import connected
@@ -184,7 +184,7 @@ class Enclosure:
             if is_ready:
                 break
             elif time.monotonic() - start >= 60:
-                raise Exception('Timeout waiting for services start.')
+                raise Exception(f'Timeout waiting for services start. services={services}')
             else:
                 time.sleep(3)
 
