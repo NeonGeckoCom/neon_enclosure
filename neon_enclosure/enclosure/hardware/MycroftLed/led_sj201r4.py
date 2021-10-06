@@ -13,7 +13,7 @@
 # limitations under the License.
 import os
 from neon_enclosure.enclosure.hardware.MycroftLed.MycroftLed import MycroftLed
-from ovos_utils.log import LOG
+from neon_utils import LOG
 
 
 class Led(MycroftLed):

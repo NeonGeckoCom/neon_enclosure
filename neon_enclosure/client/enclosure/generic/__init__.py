@@ -15,7 +15,7 @@
 import time
 from threading import Timer
 from mycroft_bus_client import Message
-from ovos_utils.log import LOG
+from neon_utils import LOG
 import mycroft.dialog
 from mycroft.api import has_been_paired
 from mycroft.audio import wait_while_speaking
