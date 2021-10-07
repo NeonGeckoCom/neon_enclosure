@@ -15,41 +15,10 @@
 import time
 
 from abc import abstractmethod
-from collections import namedtuple
-from threading import Lock
 from mycroft_bus_client import MessageBusClient, Message
 from neon_utils import LOG
 from neon_utils.configuration_utils import get_mycroft_compatible_config
 from neon_utils.net_utils import check_online
-
-Namespace = namedtuple('Namespace', ['name', 'pages'])
-write_lock = Lock()
-namespace_lock = Lock()
-
-RESERVED_KEYS = ['__from', '__idle']
-
-
-def _get_page_data(message):
-    """ Extract page related data from a message.
-
-    Args:
-        message: messagebus message object
-    Returns:
-        tuple (page, namespace, index)
-    Raises:
-        ValueError if value is missing.
-    """
-    data = message.data
-    # Note:  'page' can be either a string or a list of strings
-    if 'page' not in data:
-        raise ValueError("Page missing in data")
-    if 'index' in data:
-        index = data['index']
-    else:
-        index = 0
-    page = data.get("page", "")
-    namespace = data.get("__from", "")
-    return page, namespace, index
 
 
 class Enclosure:
@@ -64,27 +33,6 @@ class Enclosure:
 
         # Create Message Bus Client
         self.bus = MessageBusClient()
-
-        # This datastore holds the data associated with the GUI provider. Data
-        # is stored in Namespaces, so you can have:
-        # self.datastore["namespace"]["name"] = value
-        # Typically the namespace is a meaningless identifier, but there is a
-        # special "SYSTEM" namespace.
-        self.datastore = {}
-
-        # self.loaded is a list, each element consists of a namespace named
-        # tuple.
-        # The namespace namedtuple has the properties "name" and "pages"
-        # The name contains the namespace name as a string and pages is a
-        # mutable list of loaded pages.
-        #
-        # [Namespace name, [List of loaded qml pages]]
-        # [
-        # ["SKILL_NAME", ["page1.qml, "page2.qml", ... , "pageN.qml"]
-        # [...]
-        # ]
-        self.loaded = []  # list of lists in order.
-        self.explicit_move = True  # Set to true to send reorder commands
 
         # TODO: this requires the Enclosure to be up and running before the training is complete.
         self.bus.once('mycroft.skills.trained', self.is_device_ready)
@@ -168,7 +116,7 @@ class Enclosure:
                 time.sleep(3)
 
         if is_ready:
-            LOG.info("Mycroft is all loaded and ready to roll!")
+            LOG.info("Core is all loaded and ready to roll!")
             self.bus.emit(Message('mycroft.ready'))
 
         return is_ready

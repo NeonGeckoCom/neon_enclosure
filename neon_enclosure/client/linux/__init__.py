@@ -35,12 +35,6 @@ except ImportError:
     AlsaAudio = None
 
 
-try:
-    from neon_enclosure.components.audio.alsa_audio import AlsaAudio
-except ImportError:
-    AlsaAudio = None
-
-
 class EnclosureLinux(Enclosure):
     """
     Serves as a communication interface between a simple text frontend and
