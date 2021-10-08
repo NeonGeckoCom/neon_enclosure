@@ -15,9 +15,8 @@
 import importlib
 import threading
 import time
+
 from ovos_utils.signal import create_signal
-import RPi.GPIO as GPIO
-import os
 from neon_utils import LOG
 
 

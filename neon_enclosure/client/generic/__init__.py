@@ -31,9 +31,6 @@ class EnclosureGeneric(Enclosure):
 
     def __init__(self):
         super().__init__("generic")
-        # TODO: this requires the Enclosure to be up and running before the
-        # training is complete.
-        self.bus.on('mycroft.skills.trained', self.is_device_ready)
 
         # initiates the web sockets on display manager
         # NOTE: this is a temporary place to connect the display manager
@@ -57,15 +54,3 @@ class EnclosureGeneric(Enclosure):
 
     def on_volume_unduck(self, message):
         pass
-
-    _last_internet_notification = 0
-
-    def speak(self, text):
-        self.bus.emit(Message("speak", {'utterance': text}))
-
-    def _handle_pairing_complete(self, _):
-        """
-        Handler for 'mycroft.paired', unmutes the mic after the pairing is
-        complete.
-        """
-        self.bus.emit(Message("mycroft.mic.unmute"))

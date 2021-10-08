@@ -120,6 +120,3 @@ class EnclosureLinux(Enclosure):
         :return:
         """
         self.audio_system.set_volume(self._pre_duck_level)
-
-    def speak(self, text):
-        self.bus.emit(Message("speak", {'utterance': text}))

@@ -83,7 +83,7 @@ def main(ready_hook=on_ready, error_hook=on_error, stopping_hook=on_stopping, co
 
     if enclosure:
         callbacks = StatusCallbackMap(on_ready=ready_hook, on_error=error_hook,
-                                      on_stopping=stopping_hook)
+                                      on_stopping=stopping_hook, on_alive=None, on_started=None)
         status = ProcessStatus('enclosure', enclosure.bus, callbacks)
 
         # crude attempt to deal with hardware beyond custom hat
