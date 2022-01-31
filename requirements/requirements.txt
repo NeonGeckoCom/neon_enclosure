@@ -1,5 +1,6 @@
 mycroft-messagebus-client>=0.9
-neon-utils>=0.5.7
+neon-utils>=0.14.3a7
+# TODO: Update to release
 tornado==6.0.3
 RPi.GPIO==0.7.0
 smbus2==0.4.0

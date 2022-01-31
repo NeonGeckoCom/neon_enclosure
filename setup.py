@@ -53,6 +53,9 @@ setup(
     url='https://github.com/NeonGeckoCom/neon-enclosure',
     license='NeonAI License v1.0',
     install_requires=get_requirements("requirements.txt"),
+    extras_require={
+        "docker": get_requirements("docker.txt")
+    },
     author='Neongecko',
     author_email='developers@neon.ai',
     description="Neon Enclosure Module",
