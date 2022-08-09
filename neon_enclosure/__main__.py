@@ -25,3 +25,30 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+from neon_utils.configuration_utils import init_config_dir
+from neon_utils.messagebus_utils import get_messagebus
+
+
+def main(*args, **kwargs):
+
+    init_config_dir()
+    bus = get_messagebus()
+    kwargs["bus"] = bus
+    from neon_utils.signal_utils import init_signal_bus, \
+        init_signal_handlers
+    init_signal_bus(bus)
+    init_signal_handlers()
+
+    from ovos_PHAL import PHAL
+    from mycroft.util import reset_sigint_handler, wait_for_exit_signal
+
+    reset_sigint_handler()
+    service = PHAL(*args, **kwargs)
+    service.start()
+    wait_for_exit_signal()
+    service.shutdown()
+
+
+if __name__ == '__main__':
+    main()

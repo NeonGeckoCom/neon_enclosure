@@ -1,7 +1,9 @@
-FROM python:3.8
+FROM python:3.8-slim
 
 LABEL vendor=neon.ai \
     ai.neon.name="neon-enclosure"
+
+ENV NEON_CONFIG_PATH /config
 
 ADD . /neon_enclosure
 WORKDIR /neon_enclosure
@@ -10,17 +12,8 @@ RUN apt update && \
     export CFLAGS="-fcommon" && \
     apt install -y pulseaudio && \
     pip install wheel && \
-    pip install \
-    holmesV \
-    .
+    pip install .
 
-RUN useradd -ms /bin/bash neon
-USER neon
-
-COPY docker_overlay/asoundrc /home/neon/.asoundrc
-
-RUN mkdir -p /home/neon/.config/pulse && \
-    mkdir -p /home/neon/.config/neon && \
-    mkdir -p /home/neon/.local/share/neon
+COPY docker_overlay/ /
 
 CMD ["neon_enclosure_client"]
