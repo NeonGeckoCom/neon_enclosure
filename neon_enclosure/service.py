@@ -35,5 +35,7 @@ class NeonHardwareAbstractionLayer(PHAL):
         LOG.info(f"Initializing PHAL")
         super().__init__(*args, **kwargs)
 
-    def shutdown(self):
-        self.status.set_stopping()
+    def start(self):
+        LOG.info("Starting PHAL")
+        PHAL.start(self)
+        LOG.info("Started PHAL")
