@@ -10,8 +10,6 @@ to start the container.
 docker run -d \
 --network=host \
 --name=neon_enclosure \
--v ${NEON_DATA_DIR}:/home/neon/.local/share/neon:rw \
--v ${NEON_CONFIG_DIR}:/home/neon/.config/neon:rw \
 -v ~/.config/pulse/cookie:/home/neon/.config/pulse/cookie:ro \
 -v ${XDG_RUNTIME_DIR}/pulse:${XDG_RUNTIME_DIR}/pulse:ro \
 --device=/dev/snd:/dev/snd \

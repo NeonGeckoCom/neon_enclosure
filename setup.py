@@ -60,7 +60,7 @@ setup(
     long_description_content_type="text/markdown",
     entry_points={
         'console_scripts': [
-            'neon_enclosure_client=neon_enclosure.client.enclosure.__main__:main'
+            'neon_enclosure_client=neon_enclosure.__main__:main'
         ]
     }
 )
