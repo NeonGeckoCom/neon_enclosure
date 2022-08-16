@@ -40,11 +40,11 @@ def main(*args, **kwargs):
     init_signal_bus(bus)
     init_signal_handlers()
 
-    from ovos_PHAL import PHAL
+    from .service import NeonHardwareAbstractionLayer
     from mycroft.util import reset_sigint_handler, wait_for_exit_signal
 
     reset_sigint_handler()
-    service = PHAL(*args, **kwargs)
+    service = NeonHardwareAbstractionLayer(*args, **kwargs)
     service.start()
     wait_for_exit_signal()
     service.shutdown()
