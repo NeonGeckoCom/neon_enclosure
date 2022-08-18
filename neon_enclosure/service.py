@@ -25,3 +25,39 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+from ovos_PHAL import PHAL
+from ovos_plugin_manager.phal import find_phal_plugins
+
+from neon_utils.logger import LOG
+
+
+class NeonHardwareAbstractionLayer(PHAL):
+    def __init__(self, *args, **kwargs):
+        LOG.info(f"Initializing PHAL")
+        super().__init__(*args, **kwargs)
+
+    def start(self):
+        LOG.info("Starting PHAL")
+        PHAL.start(self)
+        LOG.info("Started PHAL")
+
+    def load_plugins(self):
+        for name, plug in find_phal_plugins().items():
+            LOG.info(f"Loading {name}")
+            config = self.config.get(name) or {}
+            try:
+                if hasattr(plug, "validator"):
+                    enabled = plug.validator.validate(config)
+                else:
+                    enabled = config.get("enabled")
+            except Exception as e:
+                LOG.exception(e)
+                enabled = False
+            if enabled:
+                try:
+                    self.drivers[name] = plug(bus=self.bus, config=config)
+                    LOG.info(f"PHAL plugin loaded: {name}")
+                except Exception:
+                    LOG.exception(f"failed to load PHAL plugin: {name}")
+                    continue
