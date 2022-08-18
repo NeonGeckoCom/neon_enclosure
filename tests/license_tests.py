@@ -10,10 +10,13 @@ license_overrides = {
     'yt-dlp': "Unlicense",
     'pyxdg': 'GPL-2.0',
     'ptyprocess': 'ISC license',
-    'psutil': 'BSD3'
+    'psutil': 'BSD3',
+    'setuptools': 'MIT',
+    "python-dateutil": "Apache-2.0",
+    "pyparsing": "MIT"
 }
 # explicitly allow these packages that would fail otherwise
-whitelist = []
+whitelist = ['neon-enclosure']
 
 # validation flags
 allow_nonfree = False
