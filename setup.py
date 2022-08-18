@@ -51,7 +51,7 @@ setup(
     version=version,
     packages=find_packages(),
     url='https://github.com/NeonGeckoCom/neon-enclosure',
-    license='NeonAI License v1.0',
+    license='BSD-3-Clause',
     install_requires=get_requirements("requirements.txt"),
     author='Neongecko',
     author_email='developers@neon.ai',
