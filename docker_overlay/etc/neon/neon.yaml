@@ -1,3 +1,0 @@
-signal:
-  use_signal_files: false
-  max_wait_seconds: 300
