@@ -28,7 +28,8 @@
 
 from ovos_PHAL import PHAL
 from ovos_plugin_manager.phal import find_phal_plugins
-
+from time import time
+from mycroft_bus_client import Message
 from neon_utils.logger import LOG
 
 
@@ -39,6 +40,14 @@ class NeonHardwareAbstractionLayer(PHAL):
 
     def start(self):
         LOG.info("Starting PHAL")
+        if self.config.get('wait_for_gui'):
+            LOG.info("Waiting for GUI Service to start")
+            timeout = time() + 30
+            while time() < timeout:
+                resp = self.bus.wait_for_response(Message('mycroft.gui.is_alive'))
+                if resp and resp.data.get('status'):
+                    LOG.debug('GUI Service is alive')
+                    break
         PHAL.start(self)
         LOG.info("Started PHAL")
 
