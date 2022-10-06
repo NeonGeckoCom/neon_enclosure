@@ -13,7 +13,8 @@ license_overrides = {
     'psutil': 'BSD3',
     'setuptools': 'MIT',
     "python-dateutil": "Apache-2.0",
-    "pyparsing": "MIT"
+    "pyparsing": "MIT",
+    "idna": "BSD3"
 }
 # explicitly allow these packages that would fail otherwise
 whitelist = ['neon-enclosure']
