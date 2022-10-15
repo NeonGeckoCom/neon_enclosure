@@ -27,12 +27,13 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from neon_utils.configuration_utils import init_config_dir
+from neon_utils.log_utils import init_log
 from neon_utils.messagebus_utils import get_messagebus
 
 
 def main(*args, **kwargs):
-
     init_config_dir()
+    init_log(log_name="enclosure")
     bus = get_messagebus()
     kwargs["bus"] = bus
     from neon_utils.signal_utils import init_signal_bus, \

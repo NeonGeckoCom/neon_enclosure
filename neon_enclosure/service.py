@@ -30,7 +30,7 @@ from ovos_PHAL import PHAL
 from ovos_plugin_manager.phal import find_phal_plugins
 from time import time
 from mycroft_bus_client import Message
-from neon_utils.logger import LOG
+from ovos_utils.log import LOG
 
 
 class NeonHardwareAbstractionLayer(PHAL):

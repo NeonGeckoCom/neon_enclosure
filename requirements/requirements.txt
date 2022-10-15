@@ -1,2 +1,2 @@
 ovos_PHAL~=0.0
-neon_utils[network]~=1.0,>=1.0.3a2
+neon_utils[network]~=1.0,>=1.0.3a6
