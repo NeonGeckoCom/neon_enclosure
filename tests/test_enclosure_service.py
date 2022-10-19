@@ -30,6 +30,7 @@ import os
 import sys
 import unittest
 
+from ovos_utils.log import LOG
 from mock.mock import Mock
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -46,7 +47,11 @@ class TestEnclosureService(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
-        cls.messagebus.shutdown()
+        try:
+            cls.messagebus.shutdown()
+        except Exception as e:
+            # TODO: Handle this in Messagebus Service
+            LOG.exception(e)
 
     def test_gui_service(self):
         alive = Mock()
