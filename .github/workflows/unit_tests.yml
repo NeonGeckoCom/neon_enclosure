@@ -24,7 +24,18 @@ jobs:
   docker_build_tests:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+  unit_tests:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build image
         run: docker build .
+      - name: Test Service
+        run: |
+          pytest tests/test_enclosure_service.py --doctest-modules --junitxml=tests/enclosure-service-test-results.xml
+      - name: Upload Enclosure Service test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: enclosure-service-test-results
+          path: tests/enclosure-service-test-results.xml

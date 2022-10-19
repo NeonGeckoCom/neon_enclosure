@@ -25,52 +25,54 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from threading import Event
 
-from ovos_PHAL import PHAL
-from ovos_plugin_manager.phal import find_phal_plugins
-from time import time
-from mycroft_bus_client import Message
-from ovos_utils.log import LOG
+import os
+import sys
+import unittest
+
+from mock.mock import Mock
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from neon_enclosure.service import NeonHardwareAbstractionLayer
 
 
-class NeonHardwareAbstractionLayer(PHAL):
-    def __init__(self, *args, **kwargs):
-        LOG.info(f"Initializing PHAL")
-        super().__init__(*args, **kwargs)
-        self.status.set_alive()
-        self.started = Event()
+class TestGUIService(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        from neon_messagebus.service import NeonBusService
+        cls.messagebus = NeonBusService(debug=True, daemonic=True)
+        cls.messagebus.start()
 
-    def start(self):
-        LOG.info("Starting PHAL")
-        if self.config.get('wait_for_gui'):
-            LOG.info("Waiting for GUI Service to start")
-            timeout = time() + 30
-            while time() < timeout:
-                resp = self.bus.wait_for_response(Message('mycroft.gui.is_alive'))
-                if resp and resp.data.get('status'):
-                    LOG.debug('GUI Service is alive')
-                    break
-        PHAL.start(self)
-        LOG.info("Started PHAL")
-        self.started.set()
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.messagebus.shutdown()
 
-    def load_plugins(self):
-        for name, plug in find_phal_plugins().items():
-            LOG.info(f"Loading {name}")
-            config = self.config.get(name) or {}
-            try:
-                if hasattr(plug, "validator"):
-                    enabled = plug.validator.validate(config)
-                else:
-                    enabled = config.get("enabled")
-            except Exception as e:
-                LOG.exception(e)
-                enabled = False
-            if enabled:
-                try:
-                    self.drivers[name] = plug(bus=self.bus, config=config)
-                    LOG.info(f"PHAL plugin loaded: {name}")
-                except Exception:
-                    LOG.exception(f"failed to load PHAL plugin: {name}")
-                    continue
+    def test_gui_service(self):
+        alive = Mock()
+        started = Mock()
+        ready = Mock()
+        stopping = Mock()
+        service = NeonHardwareAbstractionLayer(alive_hook=alive,
+                                               started_hook=started,
+                                               ready_hook=ready,
+                                               stopping_hook=stopping,
+                                               daemonic=True)
+        alive.assert_called_once()
+        started.assert_not_called()
+        ready.assert_not_called()
+        stopping.assert_not_called()
+
+        service.start()
+        service.started.wait()
+
+        alive.assert_called_once()
+        started.assert_called_once()
+        ready.assert_called_once()
+        stopping.assert_not_called()
+
+        service.shutdown()
+        stopping.assert_called_once()
+
+
+if __name__ == '__main__':
+    unittest.main()
