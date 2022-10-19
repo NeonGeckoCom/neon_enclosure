@@ -36,6 +36,9 @@ from ovos_utils.log import LOG
 class NeonHardwareAbstractionLayer(PHAL):
     def __init__(self, *args, **kwargs):
         LOG.info(f"Initializing PHAL")
+        # TODO: PHAL should accept these args to be consistent with other services
+        kwargs.pop('stopping_hook', None)
+        kwargs.pop('started_hook', None)
         super().__init__(*args, **kwargs)
 
     def start(self):
