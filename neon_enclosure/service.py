@@ -39,6 +39,7 @@ class NeonHardwareAbstractionLayer(PHAL):
         # TODO: PHAL should accept these args to be consistent with other services
         kwargs.pop('stopping_hook', None)
         kwargs.pop('started_hook', None)
+        kwargs.pop('alive_hook', None)
         if kwargs.get('ready_hook'):
             kwargs['on_ready'] = kwargs.pop('ready_hook')
         if kwargs.get('error_hook'):
