@@ -36,12 +36,13 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from neon_enclosure.service import NeonHardwareAbstractionLayer
 
 
-class TestGUIService(unittest.TestCase):
+class TestEnclosureService(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         from neon_messagebus.service import NeonBusService
         cls.messagebus = NeonBusService(debug=True, daemonic=True)
         cls.messagebus.start()
+        cls.messagebus.started.wait()
 
     @classmethod
     def tearDownClass(cls) -> None:
