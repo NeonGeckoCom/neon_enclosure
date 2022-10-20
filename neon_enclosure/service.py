@@ -32,6 +32,7 @@ from ovos_plugin_manager.phal import find_phal_plugins
 from time import time
 from mycroft_bus_client import Message
 from ovos_utils.log import LOG
+from ovos_workshop import OVOSAbstractApplication
 
 
 class NeonHardwareAbstractionLayer(PHAL):
@@ -78,10 +79,11 @@ class NeonHardwareAbstractionLayer(PHAL):
 
     def shutdown(self):
         LOG.info("Shutting Down")
-        PHAL.shutdown(self)
+        self.status.set_stopping()
         for plugin in self.drivers.values():
             try:
                 if hasattr(plugin, 'shutdown'):
                     plugin.shutdown()
             except Exception as e:
                 LOG.exception(e)
+        OVOSAbstractApplication.shutdown(self)
