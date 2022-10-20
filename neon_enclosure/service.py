@@ -86,7 +86,8 @@ class NeonHardwareAbstractionLayer(PHAL):
                     LOG.debug(f"Shutting Down {service}")
                     clazz.shutdown()
             except Exception as e:
-                LOG.exception(f"Error shutting down {service}: {e}")
+                LOG.error(f"Error shutting down {service}: {e}")
+            del clazz
         try:
             OVOSAbstractApplication.shutdown(self)
         except Exception as e:
