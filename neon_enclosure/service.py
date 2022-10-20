@@ -79,3 +79,9 @@ class NeonHardwareAbstractionLayer(PHAL):
     def shutdown(self):
         LOG.info("Shutting Down")
         PHAL.shutdown(self)
+        for plugin in self.drivers.values():
+            try:
+                if hasattr(plugin, 'shutdown'):
+                    plugin.shutdown()
+            except Exception as e:
+                LOG.exception(e)
