@@ -75,3 +75,7 @@ class NeonHardwareAbstractionLayer(PHAL):
                 except Exception:
                     LOG.exception(f"failed to load PHAL plugin: {name}")
                     continue
+
+    def shutdown(self):
+        LOG.info("Shutting Down")
+        PHAL.shutdown(self)
