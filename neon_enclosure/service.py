@@ -80,10 +80,4 @@ class NeonHardwareAbstractionLayer(PHAL):
     def shutdown(self):
         LOG.info("Shutting Down")
         self.status.set_stopping()
-        for plugin in self.drivers.values():
-            try:
-                if hasattr(plugin, 'shutdown'):
-                    plugin.shutdown()
-            except Exception as e:
-                LOG.exception(e)
         OVOSAbstractApplication.shutdown(self)
