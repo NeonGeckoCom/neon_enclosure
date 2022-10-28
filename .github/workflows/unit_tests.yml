@@ -28,3 +28,29 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build image
         run: docker build .
+  unit_tests:
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        python-version: [ 3.7, 3.8, 3.9, '3.10' ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install portaudio19-dev python3-pyaudio
+          python -m pip install --upgrade pip
+          pip install . -r requirements/test_requirements.txt
+      - name: Test Service
+        run: |
+          pytest tests/test_enclosure_service.py --doctest-modules --junitxml=tests/enclosure-service-test-results.xml
+      - name: Upload Enclosure Service test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: enclosure-service-test-results
+          path: tests/enclosure-service-test-results.xml

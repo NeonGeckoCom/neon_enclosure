@@ -25,22 +25,35 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+from threading import Event
 
 from ovos_PHAL import PHAL
 from ovos_plugin_manager.phal import find_phal_plugins
-
-from neon_utils.logger import LOG
+from time import time
+from mycroft_bus_client import Message
+from ovos_utils.log import LOG
 
 
 class NeonHardwareAbstractionLayer(PHAL):
     def __init__(self, *args, **kwargs):
         LOG.info(f"Initializing PHAL")
         super().__init__(*args, **kwargs)
+        self.status.set_alive()
+        self.started = Event()
 
     def start(self):
         LOG.info("Starting PHAL")
+        if self.config.get('wait_for_gui'):
+            LOG.info("Waiting for GUI Service to start")
+            timeout = time() + 30
+            while time() < timeout:
+                resp = self.bus.wait_for_response(Message('mycroft.gui.is_alive'))
+                if resp and resp.data.get('status'):
+                    LOG.debug('GUI Service is alive')
+                    break
         PHAL.start(self)
         LOG.info("Started PHAL")
+        self.started.set()
 
     def load_plugins(self):
         for name, plug in find_phal_plugins().items():
