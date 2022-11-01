@@ -25,10 +25,9 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from threading import Event
 
+from threading import Event
 from ovos_PHAL import AdminPHAL
-from ovos_plugin_manager.phal import find_admin_plugins
 from ovos_utils.log import LOG
 
 
@@ -44,23 +43,3 @@ class NeonAdminHardwareAbstractionLayer(AdminPHAL):
         AdminPHAL.start(self)
         LOG.info("Started Admin PHAL")
         self.started.set()
-
-    def load_plugins(self):
-        for name, plug in find_admin_plugins().items():
-            LOG.info(f"Loading {name}")
-            config = self.config.get(name) or {}
-            try:
-                if hasattr(plug, "validator"):
-                    enabled = plug.validator.validate(config)
-                else:
-                    enabled = config.get("enabled")
-            except Exception as e:
-                LOG.exception(e)
-                enabled = False
-            if enabled:
-                try:
-                    self.drivers[name] = plug(bus=self.bus, config=config)
-                    LOG.info(f"PHAL plugin loaded: {name}")
-                except Exception:
-                    LOG.exception(f"failed to load PHAL plugin: {name}")
-                    continue
