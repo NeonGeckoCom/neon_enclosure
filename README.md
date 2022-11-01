@@ -2,6 +2,14 @@
 Enclosure module to handle any core interactions with hardware, including volume controls,
 lights, buttons, etc.
 
+## Admin Services
+`neon_enclosure.admin` contains a service much like `neon_enclosure`, but plugins
+it loads will have `root` privileges. This service is intended for handling any
+OS-level interactions requiring escalation of privileges and is excluded from Docker support.
+Because this service runs as root, it also requires configuration be initialized
+prior to its initialization and plugins it loads are responsible for not writing
+configuration changes which would result in breaking config file permissions.
+
 ## Running in Docker
 The included `Dockerfile` may be used to build a docker container for the neon_audio module. The below command may be used
 to start the container.

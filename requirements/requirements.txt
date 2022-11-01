@@ -1,2 +1,2 @@
-ovos_PHAL~=0.0.3
+ovos_PHAL~=0.0.3,>=0.0.4a2
 neon_utils~=1.1
