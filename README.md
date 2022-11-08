@@ -7,8 +7,8 @@ lights, buttons, etc.
 it loads will have `root` privileges. This service is intended for handling any
 OS-level interactions requiring escalation of privileges and is excluded from Docker support.
 Because this service runs as root, it also requires configuration be initialized
-prior to its initialization and plugins it loads are responsible for not writing
-configuration changes which would result in breaking config file permissions.
+prior to its initialization; user-level configurations will be placed in the `/root`
+directory per XDG, so any configuration should be done at the system-level.
 
 ## Running in Docker
 The included `Dockerfile` may be used to build a docker container for the neon_audio module. The below command may be used
