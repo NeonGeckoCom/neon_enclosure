@@ -1,0 +1,1 @@
+ovos-phal-plugin-notification-widgets>=1.0.0a4

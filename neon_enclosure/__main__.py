@@ -42,9 +42,13 @@ def main(*args, **kwargs):
     init_signal_handlers()
 
     from .service import NeonHardwareAbstractionLayer
-    from mycroft.util import reset_sigint_handler, wait_for_exit_signal
+    from ovos_utils import wait_for_exit_signal
 
-    reset_sigint_handler()
+    try:
+        from mycroft.util import reset_sigint_handler
+        reset_sigint_handler()
+    except ImportError:
+        pass
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
     service.start()
     wait_for_exit_signal()
