@@ -35,6 +35,7 @@ from mock.mock import Mock
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from neon_enclosure.service import NeonHardwareAbstractionLayer
+from neon_enclosure.admin.service import NeonAdminHardwareAbstractionLayer
 
 
 class TestEnclosureService(unittest.TestCase):
@@ -53,7 +54,7 @@ class TestEnclosureService(unittest.TestCase):
             # TODO: Handle this in Messagebus Service
             LOG.exception(e)
 
-    def test_gui_service(self):
+    def test_enclosure_service(self):
         alive = Mock()
         started = Mock()
         ready = Mock()
@@ -63,6 +64,49 @@ class TestEnclosureService(unittest.TestCase):
                                                ready_hook=ready,
                                                stopping_hook=stopping,
                                                daemonic=True)
+        alive.assert_called_once()
+        started.assert_not_called()
+        ready.assert_not_called()
+        stopping.assert_not_called()
+
+        service.start()
+        service.started.wait()
+
+        alive.assert_called_once()
+        started.assert_called_once()
+        ready.assert_called_once()
+        stopping.assert_not_called()
+
+        service.shutdown()
+        stopping.assert_called_once()
+
+
+class TestAdminEnclosureService(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        from neon_messagebus.service import NeonBusService
+        cls.messagebus = NeonBusService(debug=True, daemonic=True)
+        cls.messagebus.start()
+        cls.messagebus.started.wait()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        try:
+            cls.messagebus.shutdown()
+        except Exception as e:
+            # TODO: Handle this in Messagebus Service
+            LOG.exception(e)
+
+    def test_enclosure_service(self):
+        alive = Mock()
+        started = Mock()
+        ready = Mock()
+        stopping = Mock()
+        service = NeonAdminHardwareAbstractionLayer(alive_hook=alive,
+                                                    started_hook=started,
+                                                    ready_hook=ready,
+                                                    stopping_hook=stopping,
+                                                    daemonic=True)
         alive.assert_called_once()
         started.assert_not_called()
         ready.assert_not_called()
