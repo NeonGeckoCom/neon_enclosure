@@ -5,14 +5,14 @@ LABEL vendor=neon.ai \
 
 ENV NEON_CONFIG_PATH /config
 
+RUN apt update && \
+    apt install -y pulseaudio git gcc portaudio19-dev
+
 ADD . /neon_enclosure
 WORKDIR /neon_enclosure
 
-RUN apt update && \
-    export CFLAGS="-fcommon" && \
-    apt install -y pulseaudio && \
-    pip install wheel && \
-    pip install .
+RUN pip install wheel && \
+    pip install .[docker]
 
 COPY docker_overlay/ /
 
