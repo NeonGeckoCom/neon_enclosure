@@ -12,7 +12,7 @@ RUN apt update && \
     export CFLAGS="-fcommon" && \
     apt install -y pulseaudio && \
     pip install wheel && \
-    pip install .
+    pip install .[docker]
 
 COPY docker_overlay/ /
 

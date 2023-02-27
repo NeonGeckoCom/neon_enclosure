@@ -1,0 +1,2 @@
+ovos-phal-plugin-connectivity-events~=0.0.1,>=0.0.2a1
+ovos-phal-plugin-homeassistant>=0.0.0a3
