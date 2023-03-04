@@ -1,7 +1,6 @@
-ovos-core~=0.0.5
+ovos-phal-plugin-homeassistant>=0.0.0a3
 ovos-phal-plugin-notification-widgets~=1.0.0
 ovos-phal-plugin-color-scheme-manager~=1.0.0
 ovos-phal-plugin-configuration-provider~=1.0.0
 ovos-phal-plugin-dashboard~=0.0.1
-ovos-phal-plugin-ipgeo @ git+https://github.com/OpenVoiceOS/ovos-PHAL-plugin-ipgeo
-ovos-phal-plugin-homeassistant @ git+https://github.com/neondaniel/ovos-phal-plugin-homeassistant@FEAT_WebsocketAPI
+ovos-phal-plugin-connectivity-events~=0.0.1,>=0.0.2a1
