@@ -4,3 +4,4 @@ ovos-phal-plugin-color-scheme-manager~=1.0.0
 ovos-phal-plugin-configuration-provider~=1.0.0
 ovos-phal-plugin-dashboard~=0.0.1
 ovos-phal-plugin-connectivity-events~=0.0.1,>=0.0.2a1
+ovos-utils!=0.0.29,!=0.0.29a2,!=0.0.29a1
