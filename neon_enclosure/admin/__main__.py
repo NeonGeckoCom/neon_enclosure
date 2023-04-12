@@ -26,15 +26,14 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# from neon_utils.configuration_utils import init_config_dir
 from neon_utils.log_utils import init_log
-from neon_utils.messagebus_utils import get_messagebus
+from ovos_utils.messagebus import get_mycroft_bus
 
 
 def main(*args, **kwargs):
     # init_config_dir()
     init_log(log_name="admin")
-    bus = get_messagebus()
+    bus = get_mycroft_bus()
     kwargs["bus"] = bus
     from neon_utils.signal_utils import init_signal_bus, \
         init_signal_handlers
