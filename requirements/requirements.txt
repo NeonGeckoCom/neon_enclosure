@@ -1,3 +1,4 @@
 ovos_PHAL~=0.0.4
 neon_utils[network]~=1.2,>=1.2.4
+ovos_utils[extras]~=0.0.30,>=0.0.31a11
 ovos-core~=0.0.5
