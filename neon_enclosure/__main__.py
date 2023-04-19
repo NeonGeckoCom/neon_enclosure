@@ -29,6 +29,8 @@
 from neon_utils.configuration_utils import init_config_dir
 from neon_utils.log_utils import init_log
 from ovos_utils.messagebus import get_mycroft_bus
+from ovos_utils.process_utils import reset_sigint_handler
+from ovos_utils import wait_for_exit_signal
 
 
 def main(*args, **kwargs):
@@ -42,7 +44,6 @@ def main(*args, **kwargs):
     init_signal_handlers()
 
     from .service import NeonHardwareAbstractionLayer
-    from mycroft.util import reset_sigint_handler, wait_for_exit_signal
 
     reset_sigint_handler()
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
