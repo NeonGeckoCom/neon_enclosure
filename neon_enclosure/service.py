@@ -40,6 +40,7 @@ class NeonHardwareAbstractionLayer(PHAL):
         super().__init__(*args, **kwargs)
         self.status.set_alive()
         self.started = Event()
+        self.config = self.config or dict()  # TODO: Fixed in ovos_PHAL 0.0.5a1
 
     def start(self):
         LOG.info("Starting PHAL")

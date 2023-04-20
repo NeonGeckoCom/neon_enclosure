@@ -30,7 +30,7 @@ import os
 import sys
 import unittest
 
-from ovos_utils.log import LOG
+from ovos_utils.messagebus import FakeBus
 from mock.mock import Mock
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -39,20 +39,7 @@ from neon_enclosure.admin.service import NeonAdminHardwareAbstractionLayer
 
 
 class TestEnclosureService(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        from neon_messagebus.service import NeonBusService
-        cls.messagebus = NeonBusService(debug=True, daemonic=True)
-        cls.messagebus.start()
-        cls.messagebus.started.wait()
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        try:
-            cls.messagebus.shutdown()
-        except Exception as e:
-            # TODO: Handle this in Messagebus Service
-            LOG.exception(e)
+    bus = FakeBus()
 
     def test_enclosure_service(self):
         alive = Mock()
@@ -63,7 +50,8 @@ class TestEnclosureService(unittest.TestCase):
                                                started_hook=started,
                                                ready_hook=ready,
                                                stopping_hook=stopping,
-                                               daemonic=True)
+                                               daemonic=True,
+                                               bus=self.bus)
         alive.assert_called_once()
         started.assert_not_called()
         ready.assert_not_called()
@@ -82,20 +70,7 @@ class TestEnclosureService(unittest.TestCase):
 
 
 class TestAdminEnclosureService(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        from neon_messagebus.service import NeonBusService
-        cls.messagebus = NeonBusService(debug=True, daemonic=True)
-        cls.messagebus.start()
-        cls.messagebus.started.wait()
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        try:
-            cls.messagebus.shutdown()
-        except Exception as e:
-            # TODO: Handle this in Messagebus Service
-            LOG.exception(e)
+    bus = FakeBus()
 
     def test_enclosure_service(self):
         alive = Mock()
@@ -106,7 +81,8 @@ class TestAdminEnclosureService(unittest.TestCase):
                                                     started_hook=started,
                                                     ready_hook=ready,
                                                     stopping_hook=stopping,
-                                                    daemonic=True)
+                                                    daemonic=True,
+                                                    bus=self.bus)
         alive.assert_called_once()
         started.assert_not_called()
         ready.assert_not_called()
