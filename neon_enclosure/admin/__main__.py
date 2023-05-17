@@ -27,13 +27,18 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from neon_utils.log_utils import init_log
+from neon_utils.process_utils import start_malloc, snapshot_malloc, print_malloc
 from ovos_utils.messagebus import get_mycroft_bus
 from ovos_utils.process_utils import reset_sigint_handler
 from ovos_utils import wait_for_exit_signal
+from ovos_utils.log import LOG
+
 
 def main(*args, **kwargs):
     # init_config_dir()
     init_log(log_name="admin")
+    malloc_running = start_malloc(stack_depth=4)
+
     bus = get_mycroft_bus()
     kwargs["bus"] = bus
     from neon_utils.signal_utils import init_signal_bus, \
@@ -47,6 +52,11 @@ def main(*args, **kwargs):
     service = NeonAdminHardwareAbstractionLayer(*args, **kwargs)
     service.start()
     wait_for_exit_signal()
+    if malloc_running:
+        try:
+            print_malloc(snapshot_malloc())
+        except Exception as e:
+            LOG.error(e)
     service.shutdown()
 
 
