@@ -67,7 +67,7 @@ setup(
     entry_points={
         'console_scripts': [
             'neon_enclosure_client=neon_enclosure.__main__:main',
-            'neon-enclosure=neon_enclosure.__main__:neon_enclosure_cli'
+            'neon-enclosure=neon_enclosure.cli:neon_enclosure_cli'
         ]
     }
 )

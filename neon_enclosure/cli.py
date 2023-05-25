@@ -25,6 +25,7 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import os
 
 import click
 
@@ -56,7 +57,9 @@ def run():
 
 @neon_enclosure_cli.command(help="Start Neon Enclosure Admin module")
 def run_admin():
-    # TODO: Enforce root run
+    if os.geteuid() != 0:
+        click.echo("Admin enclosure must be started as `root`")
+        exit(1)
     init_config_dir()
     from neon_enclosure.admin.__main__ import main
     click.echo("Starting Admin Enclosure Service")
