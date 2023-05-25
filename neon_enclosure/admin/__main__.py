@@ -35,7 +35,6 @@ from ovos_utils.log import LOG
 
 
 def main(*args, **kwargs):
-    # init_config_dir()
     init_log(log_name="admin")
     malloc_running = start_malloc(stack_depth=4)
 

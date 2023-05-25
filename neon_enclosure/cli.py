@@ -26,37 +26,39 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from neon_utils.log_utils import init_log
-from neon_utils.process_utils import start_malloc, snapshot_malloc, print_malloc
-from ovos_utils.messagebus import get_mycroft_bus
-from ovos_utils.process_utils import reset_sigint_handler
-from ovos_utils.log import LOG
-from ovos_utils import wait_for_exit_signal
+import click
+
+from click_default_group import DefaultGroup
+from neon_utils.packaging_utils import get_package_version_spec
+from neon_utils.configuration_utils import init_config_dir
 
 
-def main(*args, **kwargs):
-    init_log(log_name="enclosure")
-    malloc_running = start_malloc(stack_depth=4)
-    bus = get_mycroft_bus()
-    kwargs["bus"] = bus
-    from neon_utils.signal_utils import init_signal_bus, \
-        init_signal_handlers
-    init_signal_bus(bus)
-    init_signal_handlers()
-
-    from .service import NeonHardwareAbstractionLayer
-
-    reset_sigint_handler()
-    service = NeonHardwareAbstractionLayer(*args, **kwargs)
-    service.start()
-    wait_for_exit_signal()
-    if malloc_running:
-        try:
-            print_malloc(snapshot_malloc())
-        except Exception as e:
-            LOG.error(e)
-    service.shutdown()
+@click.group("neon-enclosure", cls=DefaultGroup,
+             no_args_is_help=True, invoke_without_command=True,
+             help="Neon Enclosure Commands\n\n"
+                  "See also: neon COMMAND --help")
+@click.option("--version", "-v", is_flag=True, required=False,
+              help="Print the current version")
+def neon_enclosure_cli(version: bool = False):
+    if version:
+        click.echo(f"neon_enclosure version "
+                   f"{get_package_version_spec('neon_enclosure')}")
 
 
-if __name__ == '__main__':
+@neon_enclosure_cli.command(help="Start Neon Enclosure module")
+def run():
+    init_config_dir()
+    from neon_enclosure.__main__ import main
+    click.echo("Starting Enclosure Service")
     main()
+    click.echo("Enclosure Service Shutdown")
+
+
+@neon_enclosure_cli.command(help="Start Neon Enclosure Admin module")
+def run_admin():
+    # TODO: Enforce root run
+    init_config_dir()
+    from neon_enclosure.admin.__main__ import main
+    click.echo("Starting Admin Enclosure Service")
+    main()
+    click.echo("Admin Enclosure Service Shutdown")
