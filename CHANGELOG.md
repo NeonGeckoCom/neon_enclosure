@@ -1,31 +1,20 @@
 # Changelog
 
-## [1.4.2a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.4.2a1) (2023-04-20)
+## [1.4.3a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.4.3a2) (2023-05-25)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.3.2a3...1.4.2a1)
-
-**Merged pull requests:**
-
-- Update automation to run license and unit tests on PR to 'master' branch [\#64](https://github.com/NeonGeckoCom/neon_enclosure/pull/64) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.3.2a3](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.3.2a3) (2023-04-20)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.3.2a2...1.3.2a3)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.4.3a1...1.4.3a2)
 
 **Merged pull requests:**
 
-- Replace `pull_master` with `propose_release` action [\#62](https://github.com/NeonGeckoCom/neon_enclosure/pull/62) ([NeonDaniel](https://github.com/NeonDaniel))
+- Implement CLI and move config init to CLI entrypoint [\#67](https://github.com/NeonGeckoCom/neon_enclosure/pull/67) ([NeonDaniel](https://github.com/NeonDaniel))
 
-## [1.3.2a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.3.2a2) (2023-04-19)
+## [1.4.3a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.4.3a1) (2023-05-17)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.3.1...1.3.2a2)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.4.2...1.4.3a1)
 
 **Merged pull requests:**
 
-- Fix alpha release automation change [\#61](https://github.com/NeonGeckoCom/neon_enclosure/pull/61) ([NeonDaniel](https://github.com/NeonDaniel))
-- Prep stable release [\#60](https://github.com/NeonGeckoCom/neon_enclosure/pull/60) ([NeonDaniel](https://github.com/NeonDaniel))
-- Simplify Dependencies [\#59](https://github.com/NeonGeckoCom/neon_enclosure/pull/59) ([NeonDaniel](https://github.com/NeonDaniel))
-- Patch breaking change in ovos-workshop [\#57](https://github.com/NeonGeckoCom/neon_enclosure/pull/57) ([NeonDaniel](https://github.com/NeonDaniel))
+- Add optional malloc logging to service [\#66](https://github.com/NeonGeckoCom/neon_enclosure/pull/66) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 
