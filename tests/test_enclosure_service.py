@@ -29,10 +29,11 @@
 import os
 import sys
 import unittest
+from unittest.mock import patch
 
 from ovos_utils.messagebus import FakeBus
 from mock.mock import Mock
-
+from click.testing import CliRunner
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from neon_enclosure.service import NeonHardwareAbstractionLayer
 from neon_enclosure.admin.service import NeonAdminHardwareAbstractionLayer
@@ -98,6 +99,35 @@ class TestAdminEnclosureService(unittest.TestCase):
 
         service.shutdown()
         stopping.assert_called_once()
+
+
+class TestCLI(unittest.TestCase):
+    runner = CliRunner()
+
+    @patch("neon_enclosure.cli.init_config_dir")
+    @patch("neon_enclosure.__main__.main")
+    def test_run(self, main, init_config):
+        from neon_enclosure.cli import run
+        self.runner.invoke(run)
+        init_config.assert_called_once()
+        main.assert_called_once()
+
+    @patch("os.geteuid")
+    @patch("neon_enclosure.cli.init_config_dir")
+    @patch("neon_enclosure.admin.__main__.main")
+    def test_run_admin(self, main, init_config, get_id):
+        from neon_enclosure.cli import run_admin
+        # Non-root
+        get_id.return_value = 100
+        self.runner.invoke(run_admin)
+        init_config.assert_not_called()
+        main.assert_not_called()
+
+        # Root
+        get_id.return_value = 0
+        self.runner.invoke(run_admin)
+        init_config.assert_called_once()
+        main.assert_called_once()
 
 
 if __name__ == '__main__':
