@@ -34,7 +34,7 @@ from unittest.mock import patch
 from ovos_utils.messagebus import FakeBus
 from mock.mock import Mock
 from click.testing import CliRunner
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from neon_enclosure.service import NeonHardwareAbstractionLayer
 from neon_enclosure.admin.service import NeonAdminHardwareAbstractionLayer
 
