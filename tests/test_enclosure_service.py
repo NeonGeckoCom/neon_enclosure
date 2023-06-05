@@ -26,13 +26,10 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from ovos_utils.messagebus import FakeBus
-from mock.mock import Mock
 from click.testing import CliRunner
 
 from neon_enclosure.service import NeonHardwareAbstractionLayer
