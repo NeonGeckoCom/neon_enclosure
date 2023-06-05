@@ -4,5 +4,7 @@ ovos_utils[extras]~=0.0.32
 click~=8.0
 click-default-group~=1.2
 ovos-bus-client~=0.0.3
+
+# TODO: Patching ovos_PHAL inherited dependencies
 ovos_backend_client~=0.0.6
-# TODO: Patching ovos_PHAL inherited dependency
+mycroft-messagebus-client~=0.0.10
