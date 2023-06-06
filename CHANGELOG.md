@@ -1,20 +1,20 @@
 # Changelog
 
-## [1.4.3a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.4.3a2) (2023-05-25)
+## [1.5.1a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.1a2) (2023-06-05)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.4.3a1...1.4.3a2)
-
-**Merged pull requests:**
-
-- Implement CLI and move config init to CLI entrypoint [\#67](https://github.com/NeonGeckoCom/neon_enclosure/pull/67) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.4.3a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.4.3a1) (2023-05-17)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.4.2...1.4.3a1)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.1a1...1.5.1a2)
 
 **Merged pull requests:**
 
-- Add optional malloc logging to service [\#66](https://github.com/NeonGeckoCom/neon_enclosure/pull/66) ([NeonDaniel](https://github.com/NeonDaniel))
+- Stable dependencies [\#70](https://github.com/NeonGeckoCom/neon_enclosure/pull/70) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.5.1a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.1a1) (2023-06-02)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.0...1.5.1a1)
+
+**Merged pull requests:**
+
+- Add unit tests for CLI methods [\#69](https://github.com/NeonGeckoCom/neon_enclosure/pull/69) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 

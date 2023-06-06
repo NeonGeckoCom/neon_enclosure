@@ -28,10 +28,13 @@
 
 from neon_utils.log_utils import init_log
 from neon_utils.process_utils import start_malloc, snapshot_malloc, print_malloc
+from neon_utils.signal_utils import init_signal_bus, init_signal_handlers
 from ovos_utils.messagebus import get_mycroft_bus
 from ovos_utils.process_utils import reset_sigint_handler
 from ovos_utils.log import LOG
 from ovos_utils import wait_for_exit_signal
+
+from neon_enclosure.service import NeonHardwareAbstractionLayer
 
 
 def main(*args, **kwargs):
@@ -39,13 +42,9 @@ def main(*args, **kwargs):
     malloc_running = start_malloc(stack_depth=4)
     bus = get_mycroft_bus()
     kwargs["bus"] = bus
-    from neon_utils.signal_utils import init_signal_bus, \
-        init_signal_handlers
+
     init_signal_bus(bus)
     init_signal_handlers()
-
-    from .service import NeonHardwareAbstractionLayer
-
     reset_sigint_handler()
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
     service.start()
