@@ -43,6 +43,7 @@ def main(*args, **kwargs):
 
     bus = get_mycroft_bus()
     kwargs["bus"] = bus
+    kwargs["skill_id"] = "neon_admin"
 
     init_signal_bus(bus)
     init_signal_handlers()

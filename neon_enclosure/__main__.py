@@ -42,7 +42,7 @@ def main(*args, **kwargs):
     malloc_running = start_malloc(stack_depth=4)
     bus = get_mycroft_bus()
     kwargs["bus"] = bus
-
+    kwargs["skill_id"] = "neon_phal"
     init_signal_bus(bus)
     init_signal_handlers()
     reset_sigint_handler()
