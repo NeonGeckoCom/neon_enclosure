@@ -1,5 +1,5 @@
 ovos_PHAL~=0.0.4
-neon_utils[network]~=1.5,>=1.5.1a7
+neon_utils[network]~=1.6
 ovos_utils~=0.0.32
 click~=8.0
 click-default-group~=1.2
