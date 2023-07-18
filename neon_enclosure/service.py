@@ -35,9 +35,9 @@ from ovos_utils.log import LOG
 
 
 class NeonHardwareAbstractionLayer(PHAL):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, skill_id="neon.phal", **kwargs):
         LOG.info(f"Initializing PHAL")
-        super().__init__(*args, **kwargs)
+        PHAL.__init__(self, skill_id=skill_id, **kwargs)
         self.status.set_alive()
         self.started = Event()
         self.config = self.config or dict()  # TODO: Fixed in ovos_PHAL 0.0.5a1
