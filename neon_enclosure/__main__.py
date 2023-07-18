@@ -38,11 +38,14 @@ from neon_enclosure.service import NeonHardwareAbstractionLayer
 
 
 def main(*args, **kwargs):
+    kwargs.setdefault("skill_id", "neon.phal")
     init_log(log_name="enclosure")
     malloc_running = start_malloc(stack_depth=4)
-    bus = get_mycroft_bus()
-    kwargs["bus"] = bus
-    kwargs["skill_id"] = "neon_phal"
+
+    if "bus" not in kwargs:
+        bus = get_mycroft_bus()
+        kwargs["bus"] = bus
+
     init_signal_bus(bus)
     init_signal_handlers()
     reset_sigint_handler()
@@ -55,13 +58,6 @@ def main(*args, **kwargs):
         except Exception as e:
             LOG.error(e)
     service.shutdown()
-
-
-def deprecated_entrypoint():
-    from ovos_utils.log import log_deprecation
-    log_deprecation("Use `neon-enclosure run` in place of "
-                    "`neon_enclosure_client`", "2.0.0")
-    main()
 
 
 if __name__ == '__main__':
