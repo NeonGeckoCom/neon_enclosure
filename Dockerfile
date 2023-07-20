@@ -16,8 +16,6 @@ RUN apt update && \
 ADD . /neon_enclosure
 WORKDIR /neon_enclosure
 
-RUN apt install git
-
 RUN pip install wheel && \
     pip install .[docker]
 
