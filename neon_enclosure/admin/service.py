@@ -32,9 +32,9 @@ from ovos_utils.log import LOG
 
 
 class NeonAdminHardwareAbstractionLayer(AdminPHAL):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, skill_id="neon.phal_admin", **kwargs):
         LOG.info(f"Initializing Admin PHAL")
-        super().__init__(*args, **kwargs)
+        AdminPHAL.__init__(self, skill_id=skill_id, **kwargs)
         self.status.set_alive()
         self.started = Event()
         self.config = self.config or dict()  # TODO: Fixed in ovos_PHAL 0.0.5a1

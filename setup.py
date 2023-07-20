@@ -66,7 +66,8 @@ setup(
     long_description_content_type="text/markdown",
     entry_points={
         'console_scripts': [
-            'neon_enclosure_client=neon_enclosure.__main__:main',
+            # TODO: deprecate `neon_enclosure_client` entrypoint
+            'neon_enclosure_client=neon_enclosure.__main__:deprecated_entrypoint',
             'neon-enclosure=neon_enclosure.cli:neon_enclosure_cli'
         ]
     }

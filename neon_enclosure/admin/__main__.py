@@ -38,12 +38,15 @@ from neon_enclosure.admin.service import NeonAdminHardwareAbstractionLayer
 
 
 def main(*args, **kwargs):
+    kwargs.setdefault("skill_id", "neon.phal_admin")
     init_log(log_name="admin")
     malloc_running = start_malloc(stack_depth=4)
 
-    bus = get_mycroft_bus()
-    kwargs["bus"] = bus
-
+    if "bus" not in kwargs:
+        bus = get_mycroft_bus()
+        kwargs["bus"] = bus
+    else:
+        bus = kwargs["bus"]
     init_signal_bus(bus)
     init_signal_handlers()
     reset_sigint_handler()

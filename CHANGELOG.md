@@ -1,20 +1,36 @@
 # Changelog
 
-## [1.5.1a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.1a2) (2023-06-05)
+## [1.5.2a4](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.2a4) (2023-07-20)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.1a1...1.5.1a2)
-
-**Merged pull requests:**
-
-- Stable dependencies [\#70](https://github.com/NeonGeckoCom/neon_enclosure/pull/70) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.5.1a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.1a1) (2023-06-02)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.0...1.5.1a1)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.2a3...1.5.2a4)
 
 **Merged pull requests:**
 
-- Add unit tests for CLI methods [\#69](https://github.com/NeonGeckoCom/neon_enclosure/pull/69) ([NeonDaniel](https://github.com/NeonDaniel))
+- Better handle default init kwargs [\#75](https://github.com/NeonGeckoCom/neon_enclosure/pull/75) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.5.2a3](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.2a3) (2023-07-19)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.2a2...1.5.2a3)
+
+**Merged pull requests:**
+
+- Add `skill_id` to services to resolve logged deprecation warnings [\#74](https://github.com/NeonGeckoCom/neon_enclosure/pull/74) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.5.2a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.2a2) (2023-07-18)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.2a1...1.5.2a2)
+
+**Merged pull requests:**
+
+- Mark old CLI entrypoint as deprecated [\#73](https://github.com/NeonGeckoCom/neon_enclosure/pull/73) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.5.2a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.2a1) (2023-06-27)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.1...1.5.2a1)
+
+**Merged pull requests:**
+
+- Update Docker to use OVOS\_CONFIG envvars [\#72](https://github.com/NeonGeckoCom/neon_enclosure/pull/72) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 
