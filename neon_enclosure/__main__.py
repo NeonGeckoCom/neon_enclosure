@@ -45,7 +45,8 @@ def main(*args, **kwargs):
     if "bus" not in kwargs:
         bus = get_mycroft_bus()
         kwargs["bus"] = bus
-
+    else:
+        bus = kwargs["bus"]
     init_signal_bus(bus)
     init_signal_handlers()
     reset_sigint_handler()
