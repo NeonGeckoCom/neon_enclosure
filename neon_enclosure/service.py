@@ -26,6 +26,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import os
+
 from threading import Event
 from ovos_PHAL import PHAL
 from ovos_plugin_manager.phal import find_phal_plugins
@@ -53,7 +55,7 @@ class NeonHardwareAbstractionLayer(PHAL):
                     LOG.debug('GUI Service is alive')
                     break
         PHAL.start(self)
-        LOG.info("Started PHAL")
+        LOG.info(f"Started PHAL (pid={os.getpid()}")
         self.started.set()
 
     def load_plugins(self):

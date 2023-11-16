@@ -47,8 +47,10 @@ def main(*args, **kwargs):
         kwargs["bus"] = bus
     else:
         bus = kwargs["bus"]
+
     init_signal_bus(bus)
     init_signal_handlers()
+
     reset_sigint_handler()
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
     service.start()
