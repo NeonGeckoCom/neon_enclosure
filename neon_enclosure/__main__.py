@@ -55,12 +55,14 @@ def main(*args, **kwargs):
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
     service.start()
     wait_for_exit_signal()
+    LOG.debug("PHAL Exited")
     if malloc_running:
         try:
             print_malloc(snapshot_malloc())
         except Exception as e:
             LOG.error(e)
     service.shutdown()
+    LOG.info("PHAL Shutdown complete")
 
 
 def deprecated_entrypoint():

@@ -55,7 +55,7 @@ class NeonHardwareAbstractionLayer(PHAL):
                     LOG.debug('GUI Service is alive')
                     break
         PHAL.start(self)
-        LOG.info(f"Started PHAL (pid={os.getpid()}")
+        LOG.info(f"Started PHAL (pid={os.getpid()})")
         self.started.set()
 
     def load_plugins(self):
