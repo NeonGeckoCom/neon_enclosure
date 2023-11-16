@@ -54,6 +54,7 @@ def main(*args, **kwargs):
     reset_sigint_handler()
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
     service.start()
+    LOG.debug("PHAL waiting for exit")
     wait_for_exit_signal()
     LOG.debug("PHAL Exited")
     if malloc_running:
