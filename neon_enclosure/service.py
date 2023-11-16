@@ -25,14 +25,13 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from threading import Event
 
+from threading import Event
 from ovos_PHAL import PHAL
 from ovos_plugin_manager.phal import find_phal_plugins
 from time import time
-from mycroft_bus_client import Message
+from ovos_bus_client.message import Message
 from ovos_utils.log import LOG
-from ovos_workshop import OVOSAbstractApplication
 
 
 class NeonHardwareAbstractionLayer(PHAL):
@@ -89,6 +88,6 @@ class NeonHardwareAbstractionLayer(PHAL):
                 LOG.error(f"Error shutting down {service}: {e}")
             del clazz
         try:
-            OVOSAbstractApplication.shutdown(self)
+            PHAL.shutdown(self)
         except Exception as e:
             LOG.exception(e)
