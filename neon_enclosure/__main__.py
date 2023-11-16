@@ -55,7 +55,10 @@ def main(*args, **kwargs):
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
     service.start()
     LOG.debug("PHAL waiting for exit")
-    wait_for_exit_signal()
+    try:
+        wait_for_exit_signal()  # Killed here???
+    except Exception as e:
+        LOG.exception(e)
     LOG.debug("PHAL Exited")
     if malloc_running:
         try:
