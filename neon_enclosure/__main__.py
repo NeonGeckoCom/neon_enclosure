@@ -47,27 +47,19 @@ def main(*args, **kwargs):
         kwargs["bus"] = bus
     else:
         bus = kwargs["bus"]
-
     init_signal_bus(bus)
     init_signal_handlers()
-
     reset_sigint_handler()
     PIDLock('enclosure')
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
     service.start()
-    LOG.debug("PHAL waiting for exit")
-    try:
-        wait_for_exit_signal()  # Killed here???
-    except Exception as e:
-        LOG.exception(e)
-    LOG.debug("PHAL Exited")
+    wait_for_exit_signal()
     if malloc_running:
         try:
             print_malloc(snapshot_malloc())
         except Exception as e:
             LOG.error(e)
     service.shutdown()
-    LOG.info("PHAL Shutdown complete")
 
 
 def deprecated_entrypoint():

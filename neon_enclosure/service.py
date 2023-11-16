@@ -26,8 +26,6 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
-
 from threading import Event
 from ovos_PHAL import PHAL
 from ovos_plugin_manager.phal import find_phal_plugins
@@ -40,13 +38,12 @@ class NeonHardwareAbstractionLayer(PHAL):
     def __init__(self, skill_id="neon.phal", **kwargs):
         LOG.info(f"Initializing PHAL")
         PHAL.__init__(self, skill_id=skill_id, **kwargs)
-        LOG.debug(self.status.callbacks)
         self.status.set_alive()
         self.started = Event()
         self.config = self.config or dict()  # TODO: Fixed in ovos_PHAL 0.0.5a1
 
     def start(self):
-        LOG.info("Starting PHAL")
+        LOG.debug("Starting PHAL")
         if self.config.get('wait_for_gui'):
             LOG.info("Waiting for GUI Service to start")
             timeout = time() + 30
@@ -56,7 +53,7 @@ class NeonHardwareAbstractionLayer(PHAL):
                     LOG.debug('GUI Service is alive')
                     break
         PHAL.start(self)
-        LOG.info(f"Started PHAL (pid={os.getpid()})")
+        LOG.info(f"Started PHAL")
         self.started.set()
 
     def load_plugins(self):
