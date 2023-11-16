@@ -78,7 +78,11 @@ class NeonHardwareAbstractionLayer(PHAL):
 
     def shutdown(self):
         LOG.info("Shutting Down")
-        self.status.set_stopping()
+        try:
+            PHAL.shutdown(self)
+        except Exception as e:
+            LOG.exception(e)
+        # TODO: Below should be implemented in ovos-PHAL directly
         for service, clazz in self.drivers.items():
             try:
                 if hasattr(clazz, 'shutdown'):
@@ -87,7 +91,4 @@ class NeonHardwareAbstractionLayer(PHAL):
             except Exception as e:
                 LOG.error(f"Error shutting down {service}: {e}")
             del clazz
-        try:
-            PHAL.shutdown(self)
-        except Exception as e:
-            LOG.exception(e)
+
