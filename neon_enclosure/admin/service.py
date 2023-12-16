@@ -44,3 +44,18 @@ class NeonAdminHardwareAbstractionLayer(AdminPHAL):
         AdminPHAL.start(self)
         LOG.info("Started Admin PHAL")
         self.started.set()
+
+    def shutdown(self):
+        try:
+            AdminPHAL.shutdown(self)
+        except Exception as e:
+            LOG.exception(e)
+        # TODO: Below should be implemented in ovos-PHAL directly
+        for service, clazz in self.drivers.items():
+            try:
+                if hasattr(clazz, 'shutdown'):
+                    LOG.debug(f"Shutting Down {service}")
+                    clazz.shutdown()
+            except Exception as e:
+                LOG.error(f"Error shutting down {service}: {e}")
+            del clazz

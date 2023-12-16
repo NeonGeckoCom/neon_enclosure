@@ -5,6 +5,7 @@ LABEL vendor=neon.ai \
 
 ENV OVOS_CONFIG_BASE_FOLDER neon
 ENV OVOS_CONFIG_FILENAME neon.yaml
+ENV XDG_CONFIG_HOME /config
 
 RUN apt update && \
     apt install -y  \
@@ -15,8 +16,6 @@ RUN apt update && \
 
 ADD . /neon_enclosure
 WORKDIR /neon_enclosure
-
-RUN apt install git
 
 RUN pip install wheel && \
     pip install .[docker]

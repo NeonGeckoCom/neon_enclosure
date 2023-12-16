@@ -1,36 +1,44 @@
 # Changelog
 
-## [1.5.2a4](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.2a4) (2023-07-20)
+## [1.6.1a5](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a5) (2023-12-13)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.2a3...1.5.2a4)
-
-**Merged pull requests:**
-
-- Better handle default init kwargs [\#75](https://github.com/NeonGeckoCom/neon_enclosure/pull/75) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.5.2a3](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.2a3) (2023-07-19)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.2a2...1.5.2a3)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.1a4...1.6.1a5)
 
 **Merged pull requests:**
 
-- Add `skill_id` to services to resolve logged deprecation warnings [\#74](https://github.com/NeonGeckoCom/neon_enclosure/pull/74) ([NeonDaniel](https://github.com/NeonDaniel))
+- Update plugins to stable releases [\#80](https://github.com/NeonGeckoCom/neon_enclosure/pull/80) ([NeonDaniel](https://github.com/NeonDaniel))
 
-## [1.5.2a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.2a2) (2023-07-18)
+## [1.6.1a4](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a4) (2023-11-22)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.2a1...1.5.2a2)
-
-**Merged pull requests:**
-
-- Mark old CLI entrypoint as deprecated [\#73](https://github.com/NeonGeckoCom/neon_enclosure/pull/73) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.5.2a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.5.2a1) (2023-06-27)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.5.1...1.5.2a1)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.1a3...1.6.1a4)
 
 **Merged pull requests:**
 
-- Update Docker to use OVOS\_CONFIG envvars [\#72](https://github.com/NeonGeckoCom/neon_enclosure/pull/72) ([NeonDaniel](https://github.com/NeonDaniel))
+- Add monitoring plugin to docker dependencies [\#79](https://github.com/NeonGeckoCom/neon_enclosure/pull/79) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.6.1a3](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a3) (2023-11-16)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.1a2...1.6.1a3)
+
+**Merged pull requests:**
+
+- Improve Service Shutdown [\#37](https://github.com/NeonGeckoCom/neon_enclosure/pull/37) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.6.1a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a2) (2023-08-02)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.1a1...1.6.1a2)
+
+**Merged pull requests:**
+
+- Kubernetes container compat. [\#78](https://github.com/NeonGeckoCom/neon_enclosure/pull/78) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.6.1a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a1) (2023-07-20)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.0...1.6.1a1)
+
+**Merged pull requests:**
+
+- Remove redundant `git` installation in Dockerfile [\#77](https://github.com/NeonGeckoCom/neon_enclosure/pull/77) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 

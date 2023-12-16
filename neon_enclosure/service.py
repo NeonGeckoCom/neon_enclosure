@@ -25,12 +25,12 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-from threading import Event
 
+from threading import Event
 from ovos_PHAL import PHAL
 from ovos_plugin_manager.phal import find_phal_plugins
 from time import time
-from mycroft_bus_client import Message
+from ovos_bus_client.message import Message
 from ovos_utils.log import LOG
 
 
@@ -43,7 +43,7 @@ class NeonHardwareAbstractionLayer(PHAL):
         self.config = self.config or dict()  # TODO: Fixed in ovos_PHAL 0.0.5a1
 
     def start(self):
-        LOG.info("Starting PHAL")
+        LOG.debug("Starting PHAL")
         if self.config.get('wait_for_gui'):
             LOG.info("Waiting for GUI Service to start")
             timeout = time() + 30
@@ -53,7 +53,7 @@ class NeonHardwareAbstractionLayer(PHAL):
                     LOG.debug('GUI Service is alive')
                     break
         PHAL.start(self)
-        LOG.info("Started PHAL")
+        LOG.info(f"Started PHAL")
         self.started.set()
 
     def load_plugins(self):
@@ -75,3 +75,20 @@ class NeonHardwareAbstractionLayer(PHAL):
                 except Exception:
                     LOG.exception(f"failed to load PHAL plugin: {name}")
                     continue
+
+    def shutdown(self):
+        LOG.info("Shutting Down")
+        try:
+            PHAL.shutdown(self)
+        except Exception as e:
+            LOG.exception(e)
+        # TODO: Below should be implemented in ovos-PHAL directly
+        for service, clazz in self.drivers.items():
+            try:
+                if hasattr(clazz, 'shutdown'):
+                    LOG.debug(f"Shutting Down {service}")
+                    clazz.shutdown()
+            except Exception as e:
+                LOG.error(f"Error shutting down {service}: {e}")
+            del clazz
+

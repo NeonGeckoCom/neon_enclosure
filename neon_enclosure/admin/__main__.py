@@ -30,7 +30,7 @@ from neon_utils.log_utils import init_log
 from neon_utils.process_utils import start_malloc, snapshot_malloc, print_malloc
 from neon_utils.signal_utils import init_signal_bus, init_signal_handlers
 from ovos_utils.messagebus import get_mycroft_bus
-from ovos_utils.process_utils import reset_sigint_handler
+from ovos_utils.process_utils import reset_sigint_handler, PIDLock
 from ovos_utils import wait_for_exit_signal
 from ovos_utils.log import LOG
 
@@ -50,6 +50,7 @@ def main(*args, **kwargs):
     init_signal_bus(bus)
     init_signal_handlers()
     reset_sigint_handler()
+    PIDLock('admin')
     service = NeonAdminHardwareAbstractionLayer(*args, **kwargs)
     service.start()
     wait_for_exit_signal()
