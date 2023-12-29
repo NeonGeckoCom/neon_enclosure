@@ -41,7 +41,7 @@ class NeonAdminHardwareAbstractionLayer(AdminPHAL):
     @property
     def config(self):
         from ovos_utils.log import log_deprecation
-        log_deprecation("Reference `user_config`", "2.0.0")
+        log_deprecation("Reference `admin_config`", "2.0.0")
         return self.admin_config
 
     def start(self):
