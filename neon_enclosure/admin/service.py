@@ -37,7 +37,12 @@ class NeonAdminHardwareAbstractionLayer(AdminPHAL):
         AdminPHAL.__init__(self, skill_id=skill_id, **kwargs)
         self.status.set_alive()
         self.started = Event()
-        self.config = self.config or dict()  # TODO: Fixed in ovos_PHAL 0.0.5a1
+
+    @property
+    def config(self):
+        from ovos_utils.log import log_deprecation
+        log_deprecation("Reference `admin_config`", "2.0.0")
+        return self.admin_config
 
     def start(self):
         LOG.info("Starting Admin PHAL")
