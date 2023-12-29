@@ -3,5 +3,5 @@ neon_utils[network]~=1.6
 ovos_utils~=0.0.32
 click~=8.0
 click-default-group~=1.2
-ovos-bus-client~=0.0.4
+ovos-bus-client~=0.0.8
 
