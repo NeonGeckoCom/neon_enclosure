@@ -22,4 +22,6 @@ RUN pip install wheel && \
 
 COPY docker_overlay/ /
 
-CMD ["neon-enclosure", "run"]
+RUN neon-enclosure install-dependencies
+
+CMD ["bash", "/root/run.sh"]
