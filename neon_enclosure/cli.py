@@ -26,11 +26,14 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import click
+import sys
 
 from click_default_group import DefaultGroup
 from neon_utils.packaging_utils import get_package_version_spec
 from neon_utils.configuration_utils import init_config_dir
-
+from ovos_utils.log import LOG
+from ovos_config.config import Configuration
+from typing import List
 
 @click.group("neon-enclosure", cls=DefaultGroup,
              no_args_is_help=True, invoke_without_command=True,
@@ -43,6 +46,17 @@ def neon_enclosure_cli(version: bool = False):
         click.echo(f"neon_enclosure version "
                    f"{get_package_version_spec('neon_enclosure')}")
 
+@neon_enclosure_cli.command(help="Install neon-enclosure module dependencies from config & cli")
+@click.option("--package", "-p", default=[], multiple=True,
+              help="Additional package to install (can be repeated)")
+def install_dependencies(package: List[str]):
+    from neon_utils.packaging_utils import install_packages_from_pip
+    from neon_enclosure.utils import build_extra_dependency_list
+    config = Configuration()
+    dependencies = build_extra_dependency_list(config, list(package))
+    result = install_packages_from_pip("neon-enclosure", dependencies)
+    LOG.info(f"pip exit code: {result}")
+    sys.exit(result)
 
 @neon_enclosure_cli.command(help="Start Neon Enclosure module")
 def run():
