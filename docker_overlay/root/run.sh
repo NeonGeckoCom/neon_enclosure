@@ -1,3 +1,4 @@
+#!/bin/bash
 # NEON AI (TM) SOFTWARE, Software Development Kit & Application Framework
 # All trademark and other rights reserved by their respective owners
 # Copyright 2008-2022 Neongecko.com Inc.
@@ -26,41 +27,6 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from threading import Event
-from ovos_PHAL import AdminPHAL
-from ovos_utils.log import LOG
-
-
-class NeonAdminHardwareAbstractionLayer(AdminPHAL):
-    def __init__(self, skill_id="neon.phal_admin", **kwargs):
-        LOG.info(f"Initializing Admin PHAL")
-        AdminPHAL.__init__(self, skill_id=skill_id, **kwargs)
-        self.status.set_alive()
-        self.started = Event()
-
-    @property
-    def config(self):
-        from ovos_utils.log import log_deprecation
-        log_deprecation("Reference `admin_config`", "2.0.0")
-        return self.admin_config
-
-    def start(self):
-        LOG.info("Starting Admin PHAL")
-        AdminPHAL.start(self)
-        LOG.info("Started Admin PHAL")
-        self.started.set()
-
-    def shutdown(self):
-        try:
-            AdminPHAL.shutdown(self)
-        except Exception as e:
-            LOG.exception(e)
-        # TODO: Below should be implemented in ovos-PHAL directly
-        for service, clazz in self.drivers.items():
-            try:
-                if hasattr(clazz, 'shutdown'):
-                    LOG.debug(f"Shutting Down {service}")
-                    clazz.shutdown()
-            except Exception as e:
-                LOG.error(f"Error shutting down {service}: {e}")
-            del clazz
+# Plugin installation must occur in a separate thread, before module load, for the entry point to be loaded.
+neon-enclosure install-dependencies
+neon-enclosure run

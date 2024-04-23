@@ -40,11 +40,16 @@ class NeonHardwareAbstractionLayer(PHAL):
         PHAL.__init__(self, skill_id=skill_id, **kwargs)
         self.status.set_alive()
         self.started = Event()
-        self.config = self.config or dict()  # TODO: Fixed in ovos_PHAL 0.0.5a1
+
+    @property
+    def config(self):
+        from ovos_utils.log import log_deprecation
+        log_deprecation("Reference `user_config`", "2.0.0")
+        return self.user_config
 
     def start(self):
         LOG.debug("Starting PHAL")
-        if self.config.get('wait_for_gui'):
+        if self.user_config.get('wait_for_gui'):
             LOG.info("Waiting for GUI Service to start")
             timeout = time() + 30
             while time() < timeout:
@@ -59,7 +64,7 @@ class NeonHardwareAbstractionLayer(PHAL):
     def load_plugins(self):
         for name, plug in find_phal_plugins().items():
             LOG.info(f"Loading {name}")
-            config = self.config.get(name) or {}
+            config = self.user_config.get(name) or {}
             try:
                 if hasattr(plug, "validator"):
                     enabled = plug.validator.validate(config)

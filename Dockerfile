@@ -1,4 +1,4 @@
-FROM python:3.8-slim
+FROM python:3.10-slim
 
 LABEL vendor=neon.ai \
     ai.neon.name="neon-enclosure"
@@ -22,4 +22,6 @@ RUN pip install wheel && \
 
 COPY docker_overlay/ /
 
-CMD ["neon-enclosure", "run"]
+RUN neon-enclosure install-dependencies
+
+CMD ["bash", "/root/run.sh"]

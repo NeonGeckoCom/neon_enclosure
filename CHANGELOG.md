@@ -1,44 +1,30 @@
 # Changelog
 
-## [1.6.1a5](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a5) (2023-12-13)
+## [1.6.3a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.3a2) (2024-04-23)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.1a4...1.6.1a5)
-
-**Merged pull requests:**
-
-- Update plugins to stable releases [\#80](https://github.com/NeonGeckoCom/neon_enclosure/pull/80) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.6.1a4](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a4) (2023-11-22)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.1a3...1.6.1a4)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.2a5...1.6.3a2)
 
 **Merged pull requests:**
 
-- Add monitoring plugin to docker dependencies [\#79](https://github.com/NeonGeckoCom/neon_enclosure/pull/79) ([NeonDaniel](https://github.com/NeonDaniel))
+- Patch ovos-backend-client Stable Release Compatibility [\#88](https://github.com/NeonGeckoCom/neon_enclosure/pull/88) ([NeonDaniel](https://github.com/NeonDaniel))
+- 1.6.1 [\#81](https://github.com/NeonGeckoCom/neon_enclosure/pull/81) ([github-actions[bot]](https://github.com/apps/github-actions))
+- 1.6.0 [\#76](https://github.com/NeonGeckoCom/neon_enclosure/pull/76) ([github-actions[bot]](https://github.com/apps/github-actions))
+- 1.5.1 [\#71](https://github.com/NeonGeckoCom/neon_enclosure/pull/71) ([github-actions[bot]](https://github.com/apps/github-actions))
+- 1.5.0 [\#68](https://github.com/NeonGeckoCom/neon_enclosure/pull/68) ([github-actions[bot]](https://github.com/apps/github-actions))
+- 1.4.2 [\#65](https://github.com/NeonGeckoCom/neon_enclosure/pull/65) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Update Dependencies [\#56](https://github.com/NeonGeckoCom/neon_enclosure/pull/56) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Updated Automation, Documentation, Docker Plugins [\#48](https://github.com/NeonGeckoCom/neon_enclosure/pull/48) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Admin Enclosure Service [\#41](https://github.com/NeonGeckoCom/neon_enclosure/pull/41) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Docker Updates, SystemD Compatibility, Unit Tests [\#32](https://github.com/NeonGeckoCom/neon_enclosure/pull/32) ([github-actions[bot]](https://github.com/apps/github-actions))
+- PHAL Refactor [\#25](https://github.com/NeonGeckoCom/neon_enclosure/pull/25) ([github-actions[bot]](https://github.com/apps/github-actions))
 
-## [1.6.1a3](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a3) (2023-11-16)
+## [1.6.2a5](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.2a5) (2024-04-23)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.1a2...1.6.1a3)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.2a4...1.6.2a5)
 
-**Merged pull requests:**
+## [1.6.2a4](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.2a4) (2024-02-22)
 
-- Improve Service Shutdown [\#37](https://github.com/NeonGeckoCom/neon_enclosure/pull/37) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.6.1a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a2) (2023-08-02)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.1a1...1.6.1a2)
-
-**Merged pull requests:**
-
-- Kubernetes container compat. [\#78](https://github.com/NeonGeckoCom/neon_enclosure/pull/78) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.6.1a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.1a1) (2023-07-20)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.0...1.6.1a1)
-
-**Merged pull requests:**
-
-- Remove redundant `git` installation in Dockerfile [\#77](https://github.com/NeonGeckoCom/neon_enclosure/pull/77) ([NeonDaniel](https://github.com/NeonDaniel))
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.2...1.6.2a4)
 
 
 
