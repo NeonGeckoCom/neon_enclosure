@@ -5,3 +5,6 @@ ovos-phal-plugin-configuration-provider~=1.0.0
 ovos-phal-plugin-connectivity-events~=0.0.3
 ovos-phal-plugin-oauth~=0.0.2,>=0.0.3a1
 neon-phal-plugin-monitoring~=0.0.1
+
+# TODO Patching init error in 0.1.0
+ovos-backend-client>=0.1.1a3
