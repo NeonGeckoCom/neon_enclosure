@@ -1,6 +1,6 @@
-ovos-phal~=0.0.5
+ovos-phal~=0.0,>=0.0.5
 neon-utils[network]~=1.9
-ovos_utils~=0.0,>=0.0.32
+ovos-utils~=0.0,>=0.0.32
 click~=8.0
 click-default-group~=1.2
 ovos-bus-client~=0.0,>=0.0.8
