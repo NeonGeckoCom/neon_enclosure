@@ -1,6 +1,6 @@
 # NEON AI (TM) SOFTWARE, Software Development Kit & Application Framework
 # All trademark and other rights reserved by their respective owners
-# Copyright 2008-2022 Neongecko.com Inc.
+# Copyright 2008-2025 Neongecko.com Inc.
 # Contributors: Daniel McKnight, Guy Daniels, Elon Gasper, Richard Leeds,
 # Regina Bloomstine, Casimiro Ferreira, Andrii Pernatii, Kirill Hrymailo
 # BSD-3 License
@@ -25,15 +25,21 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 import click
 import sys
 
+from os import environ
 from click_default_group import DefaultGroup
 from neon_utils.packaging_utils import get_package_version_spec
-from neon_utils.configuration_utils import init_config_dir
 from ovos_utils.log import LOG
 from ovos_config.config import Configuration
 from typing import List
+
+
+environ.setdefault("OVOS_CONFIG_BASE_FOLDER", "neon")
+environ.setdefault("OVOS_CONFIG_FILENAME", "neon.yaml")
+
 
 @click.group("neon-enclosure", cls=DefaultGroup,
              no_args_is_help=True, invoke_without_command=True,
@@ -45,6 +51,7 @@ def neon_enclosure_cli(version: bool = False):
     if version:
         click.echo(f"neon_enclosure version "
                    f"{get_package_version_spec('neon_enclosure')}")
+
 
 @neon_enclosure_cli.command(help="Install neon-enclosure module dependencies from config & cli")
 @click.option("--package", "-p", default=[], multiple=True,
@@ -58,9 +65,9 @@ def install_dependencies(package: List[str]):
     LOG.info(f"pip exit code: {result}")
     sys.exit(result)
 
+
 @neon_enclosure_cli.command(help="Start Neon Enclosure module")
 def run():
-    init_config_dir()
     from neon_enclosure.__main__ import main
     click.echo("Starting Enclosure Service")
     main()
@@ -73,7 +80,6 @@ def run_admin():
     if geteuid() != 0:
         click.echo("Admin enclosure must be started as `root`")
         exit(1)
-    init_config_dir()
     from neon_enclosure.admin.__main__ import main
     click.echo("Starting Admin Enclosure Service")
     main()
