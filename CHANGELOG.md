@@ -1,30 +1,92 @@
 # Changelog
 
-## [1.6.3a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.3a2) (2024-04-23)
+## [1.7.1a11](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a11) (2025-03-18)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.2a5...1.6.3a2)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a10...1.7.1a11)
 
 **Merged pull requests:**
 
-- Patch ovos-backend-client Stable Release Compatibility [\#88](https://github.com/NeonGeckoCom/neon_enclosure/pull/88) ([NeonDaniel](https://github.com/NeonDaniel))
-- 1.6.1 [\#81](https://github.com/NeonGeckoCom/neon_enclosure/pull/81) ([github-actions[bot]](https://github.com/apps/github-actions))
-- 1.6.0 [\#76](https://github.com/NeonGeckoCom/neon_enclosure/pull/76) ([github-actions[bot]](https://github.com/apps/github-actions))
-- 1.5.1 [\#71](https://github.com/NeonGeckoCom/neon_enclosure/pull/71) ([github-actions[bot]](https://github.com/apps/github-actions))
-- 1.5.0 [\#68](https://github.com/NeonGeckoCom/neon_enclosure/pull/68) ([github-actions[bot]](https://github.com/apps/github-actions))
-- 1.4.2 [\#65](https://github.com/NeonGeckoCom/neon_enclosure/pull/65) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Update Dependencies [\#56](https://github.com/NeonGeckoCom/neon_enclosure/pull/56) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Updated Automation, Documentation, Docker Plugins [\#48](https://github.com/NeonGeckoCom/neon_enclosure/pull/48) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Admin Enclosure Service [\#41](https://github.com/NeonGeckoCom/neon_enclosure/pull/41) ([github-actions[bot]](https://github.com/apps/github-actions))
-- Docker Updates, SystemD Compatibility, Unit Tests [\#32](https://github.com/NeonGeckoCom/neon_enclosure/pull/32) ([github-actions[bot]](https://github.com/apps/github-actions))
-- PHAL Refactor [\#25](https://github.com/NeonGeckoCom/neon_enclosure/pull/25) ([github-actions[bot]](https://github.com/apps/github-actions))
+- Update unit test and add manual Docker update automation [\#102](https://github.com/NeonGeckoCom/neon_enclosure/pull/102) ([NeonDaniel](https://github.com/NeonDaniel))
 
-## [1.6.2a5](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.2a5) (2024-04-23)
+## [1.7.1a10](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a10) (2025-03-18)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.2a4...1.6.2a5)
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a9...1.7.1a10)
 
-## [1.6.2a4](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.6.2a4) (2024-02-22)
+**Merged pull requests:**
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.6.2...1.6.2a4)
+- Update dependencies to latest stable versions [\#101](https://github.com/NeonGeckoCom/neon_enclosure/pull/101) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a9](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a9) (2025-03-11)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a8...1.7.1a9)
+
+**Merged pull requests:**
+
+- Update gitignore [\#100](https://github.com/NeonGeckoCom/neon_enclosure/pull/100) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a8](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a8) (2025-03-11)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a7...1.7.1a8)
+
+**Merged pull requests:**
+
+- Add .gitignore file [\#99](https://github.com/NeonGeckoCom/neon_enclosure/pull/99) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a7](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a7) (2025-02-11)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a6...1.7.1a7)
+
+**Merged pull requests:**
+
+- Deprecate `PIDLock` usage and update Dockerfile to resolve warnings [\#98](https://github.com/NeonGeckoCom/neon_enclosure/pull/98) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a6](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a6) (2025-02-07)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a5...1.7.1a6)
+
+**Merged pull requests:**
+
+- Update default configuration handling in CLI module [\#97](https://github.com/NeonGeckoCom/neon_enclosure/pull/97) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a5](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a5) (2024-09-20)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a4...1.7.1a5)
+
+**Merged pull requests:**
+
+- Update deprecated import to valid path [\#96](https://github.com/NeonGeckoCom/neon_enclosure/pull/96) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a4](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a4) (2024-09-20)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a3...1.7.1a4)
+
+**Merged pull requests:**
+
+- Update requirements to allow ovos-phal\>=0.1 [\#95](https://github.com/NeonGeckoCom/neon_enclosure/pull/95) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a3](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a3) (2024-09-19)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a2...1.7.1a3)
+
+**Merged pull requests:**
+
+- Update OVOS dependencies [\#94](https://github.com/NeonGeckoCom/neon_enclosure/pull/94) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a2](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a2) (2024-06-28)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.1a1...1.7.1a2)
+
+**Merged pull requests:**
+
+- Update plugin load to respect explicitly disabled plugins [\#93](https://github.com/NeonGeckoCom/neon_enclosure/pull/93) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.7.1a1](https://github.com/NeonGeckoCom/neon_enclosure/tree/1.7.1a1) (2024-04-26)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon_enclosure/compare/1.7.0...1.7.1a1)
+
+**Merged pull requests:**
+
+- fix: use new path for get\_mycroft\_bus [\#92](https://github.com/NeonGeckoCom/neon_enclosure/pull/92) ([mikejgray](https://github.com/mikejgray))
 
 
 

@@ -1,6 +1,6 @@
 # NEON AI (TM) SOFTWARE, Software Development Kit & Application Framework
 # All trademark and other rights reserved by their respective owners
-# Copyright 2008-2022 Neongecko.com Inc.
+# Copyright 2008-2025 Neongecko.com Inc.
 # Contributors: Daniel McKnight, Guy Daniels, Elon Gasper, Richard Leeds,
 # Regina Bloomstine, Casimiro Ferreira, Andrii Pernatii, Kirill Hrymailo
 # BSD-3 License
@@ -60,26 +60,6 @@ class NeonHardwareAbstractionLayer(PHAL):
         PHAL.start(self)
         LOG.info(f"Started PHAL")
         self.started.set()
-
-    def load_plugins(self):
-        for name, plug in find_phal_plugins().items():
-            LOG.info(f"Loading {name}")
-            config = self.user_config.get(name) or {}
-            try:
-                if hasattr(plug, "validator"):
-                    enabled = plug.validator.validate(config)
-                else:
-                    enabled = config.get("enabled")
-            except Exception as e:
-                LOG.exception(e)
-                enabled = False
-            if enabled:
-                try:
-                    self.drivers[name] = plug(bus=self.bus, config=config)
-                    LOG.info(f"PHAL plugin loaded: {name}")
-                except Exception:
-                    LOG.exception(f"failed to load PHAL plugin: {name}")
-                    continue
 
     def shutdown(self):
         LOG.info("Shutting Down")

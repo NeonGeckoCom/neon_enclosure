@@ -1,6 +1,6 @@
 # NEON AI (TM) SOFTWARE, Software Development Kit & Application Framework
 # All trademark and other rights reserved by their respective owners
-# Copyright 2008-2022 Neongecko.com Inc.
+# Copyright 2008-2025 Neongecko.com Inc.
 # Contributors: Daniel McKnight, Guy Daniels, Elon Gasper, Richard Leeds,
 # Regina Bloomstine, Casimiro Ferreira, Andrii Pernatii, Kirill Hrymailo
 # BSD-3 License
@@ -29,8 +29,8 @@
 from neon_utils.log_utils import init_log
 from neon_utils.process_utils import start_malloc, snapshot_malloc, print_malloc
 from neon_utils.signal_utils import init_signal_bus, init_signal_handlers
-from ovos_utils.messagebus import get_mycroft_bus
-from ovos_utils.process_utils import reset_sigint_handler, PIDLock
+from ovos_bus_client.util import get_mycroft_bus
+from ovos_utils.process_utils import reset_sigint_handler
 from ovos_utils import wait_for_exit_signal
 from ovos_utils.log import LOG
 
@@ -50,7 +50,6 @@ def main(*args, **kwargs):
     init_signal_bus(bus)
     init_signal_handlers()
     reset_sigint_handler()
-    PIDLock('admin')
     service = NeonAdminHardwareAbstractionLayer(*args, **kwargs)
     service.start()
     wait_for_exit_signal()
