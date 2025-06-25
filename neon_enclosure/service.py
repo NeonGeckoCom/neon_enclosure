@@ -50,7 +50,7 @@ class NeonHardwareAbstractionLayer(PHAL):
 
     def check_health(self):
         """
-        Check the health of the PHAL service and set an error state if the
+        Check the health of the enclosure service and set an error state if the
         service is unhealthy.
         """
         if self.status.state not in (ProcessState.READY, ProcessState.ERROR):
@@ -59,7 +59,7 @@ class NeonHardwareAbstractionLayer(PHAL):
             return
         try:
             self.bus.client.send(
-                    Message("neon.phal.health_check",
+                    Message("neon.enclosure.health_check",
                             context={"session": {"session_id": "default"}})
                     .serialize())
             if self._status_from_bus_connection:
