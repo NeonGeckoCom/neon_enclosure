@@ -27,7 +27,11 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from neon_utils.log_utils import init_log
-from neon_utils.process_utils import start_malloc, snapshot_malloc, print_malloc
+from neon_utils.process_utils import (
+    start_malloc,
+    snapshot_malloc,
+    print_malloc,
+)
 from neon_utils.signal_utils import init_signal_bus, init_signal_handlers
 from ovos_bus_client.util import get_mycroft_bus
 from ovos_utils.process_utils import reset_sigint_handler
@@ -50,7 +54,14 @@ def main(*args, **kwargs):
     init_signal_bus(bus)
     init_signal_handlers()
     reset_sigint_handler()
+    health_check_server_port = kwargs.pop("health_check_server_port", None)
     service = NeonHardwareAbstractionLayer(*args, **kwargs)
+    if health_check_server_port is not None:
+        from neon_utils.process_utils import start_health_check_server
+
+        start_health_check_server(
+            service.status, health_check_server_port, service.check_health
+        )
     service.start()
     wait_for_exit_signal()
     if malloc_running:
@@ -63,10 +74,12 @@ def main(*args, **kwargs):
 
 def deprecated_entrypoint():
     from ovos_utils.log import log_deprecation
-    log_deprecation("Use `neon-enclosure run` in place of "
-                    "`neon_enclosure_client`", "2.0.0")
+
+    log_deprecation(
+        "Use `neon-enclosure run` in place of `neon_enclosure_client`", "2.0.0"
+    )
     main()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

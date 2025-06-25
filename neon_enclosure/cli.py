@@ -34,31 +34,49 @@ from click_default_group import DefaultGroup
 from neon_utils.packaging_utils import get_package_version_spec
 from ovos_utils.log import LOG
 from ovos_config.config import Configuration
-from typing import List
+from typing import List, Optional
 
 
 environ.setdefault("OVOS_CONFIG_BASE_FOLDER", "neon")
 environ.setdefault("OVOS_CONFIG_FILENAME", "neon.yaml")
 
 
-@click.group("neon-enclosure", cls=DefaultGroup,
-             no_args_is_help=True, invoke_without_command=True,
-             help="Neon Enclosure Commands\n\n"
-                  "See also: neon COMMAND --help")
-@click.option("--version", "-v", is_flag=True, required=False,
-              help="Print the current version")
+@click.group(
+    "neon-enclosure",
+    cls=DefaultGroup,
+    no_args_is_help=True,
+    invoke_without_command=True,
+    help="Neon Enclosure Commands\n\nSee also: neon COMMAND --help",
+)
+@click.option(
+    "--version",
+    "-v",
+    is_flag=True,
+    required=False,
+    help="Print the current version",
+)
 def neon_enclosure_cli(version: bool = False):
     if version:
-        click.echo(f"neon_enclosure version "
-                   f"{get_package_version_spec('neon_enclosure')}")
+        click.echo(
+            f"neon_enclosure version "
+            f"{get_package_version_spec('neon_enclosure')}"
+        )
 
 
-@neon_enclosure_cli.command(help="Install neon-enclosure module dependencies from config & cli")
-@click.option("--package", "-p", default=[], multiple=True,
-              help="Additional package to install (can be repeated)")
+@neon_enclosure_cli.command(
+    help="Install neon-enclosure module dependencies from config & cli"
+)
+@click.option(
+    "--package",
+    "-p",
+    default=[],
+    multiple=True,
+    help="Additional package to install (can be repeated)",
+)
 def install_dependencies(package: List[str]):
     from neon_utils.packaging_utils import install_packages_from_pip
     from neon_enclosure.utils import build_extra_dependency_list
+
     config = Configuration()
     dependencies = build_extra_dependency_list(config, list(package))
     result = install_packages_from_pip("neon-enclosure", dependencies)
@@ -67,20 +85,30 @@ def install_dependencies(package: List[str]):
 
 
 @neon_enclosure_cli.command(help="Start Neon Enclosure module")
-def run():
+@click.option(
+    "--health-check-server-port",
+    "-hp",
+    type=int,
+    default=None,
+    help="Port for health check server to listen on",
+)
+def run(health_check_server_port: Optional[int] = None):
     from neon_enclosure.__main__ import main
+
     click.echo("Starting Enclosure Service")
-    main()
+    main(health_check_server_port=health_check_server_port)
     click.echo("Enclosure Service Shutdown")
 
 
 @neon_enclosure_cli.command(help="Start Neon Enclosure Admin module")
 def run_admin():
     from os import geteuid
+
     if geteuid() != 0:
         click.echo("Admin enclosure must be started as `root`")
         exit(1)
     from neon_enclosure.admin.__main__ import main
+
     click.echo("Starting Admin Enclosure Service")
     main()
     click.echo("Admin Enclosure Service Shutdown")

@@ -28,24 +28,48 @@
 
 from threading import Event
 from ovos_PHAL import PHAL
-from ovos_plugin_manager.phal import find_phal_plugins
 from time import time
 from ovos_bus_client.message import Message
 from ovos_utils.log import LOG
+from ovos_utils.process_utils import ProcessState
 
 
 class NeonHardwareAbstractionLayer(PHAL):
     def __init__(self, skill_id="neon.phal", **kwargs):
-        LOG.info(f"Initializing PHAL")
+        LOG.info("Initializing PHAL")
         PHAL.__init__(self, skill_id=skill_id, **kwargs)
         self.status.set_alive()
         self.started = Event()
+        self._status_from_bus_connection = False
 
     @property
     def config(self):
         from ovos_utils.log import log_deprecation
         log_deprecation("Reference `user_config`", "2.0.0")
         return self.user_config
+
+    def check_health(self):
+        """
+        Check the health of the enclosure service and set an error state if the
+        service is unhealthy.
+        """
+        if self.status.state not in (ProcessState.READY, ProcessState.ERROR):
+            # Service is starting or stopping; skip health check
+            LOG.debug(f"Skipping health check during startup or shutdown. status={self.status.state}")
+            return
+        try:
+            self.bus.client.send(
+                    Message("neon.enclosure.health_check",
+                            context={"session": {"session_id": "default"}})
+                    .serialize())
+            if self._status_from_bus_connection:
+                self.status.set_ready()
+                self._status_from_bus_connection = False
+        except Exception as e:
+            LOG.error(f"Health check failed: {e}")
+            # Log without setting an error state as the bus should reconnect
+            self.status.set_error(f"Health check failed: {e}")
+            self._status_from_bus_connection = True
 
     def start(self):
         LOG.debug("Starting PHAL")
@@ -58,7 +82,7 @@ class NeonHardwareAbstractionLayer(PHAL):
                     LOG.debug('GUI Service is alive')
                     break
         PHAL.start(self)
-        LOG.info(f"Started PHAL")
+        LOG.info("Started PHAL")
         self.started.set()
 
     def shutdown(self):
