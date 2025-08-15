@@ -5,3 +5,4 @@ ovos-phal-plugin-configuration-provider~=1.0.0
 ovos-phal-plugin-connectivity-events~=0.1
 ovos-phal-plugin-oauth~=0.1
 neon-phal-plugin-monitoring~=0.0,>=0.0.3
+neon-phal-plugin-skill-api~=0.0,>=0.0.1a1
